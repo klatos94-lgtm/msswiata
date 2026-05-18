@@ -36,15 +36,11 @@ export default function LoginPage() {
       });
       if (signUpError) {
         setError(signUpError.message);
-      } else if (data.user) {
-        const { error: profileError } = await supabase.from("users").insert([
-          { id: data.user.id, email, nickname: nickname || email.split("@")[0] },
-        ]);
-        if (profileError) {
-          setError(profileError.message);
-        } else {
-          router.push("/dashboard");
+      } else {
+        if (data.user && nickname) {
+          await supabase.from("users").update({ nickname }).eq("id", data.user.id);
         }
+        router.push("/dashboard");
       }
     }
 

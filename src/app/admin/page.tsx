@@ -29,14 +29,13 @@ export default function AdminPage() {
       return;
     }
 
-    const { data: profile } = await supabase
-      .from("users")
-      .select("nickname")
-      .eq("id", userData.user.id)
+    const { data: adminData } = await supabase
+      .from("admins")
+      .select("user_id")
+      .eq("user_id", userData.user.id)
       .single();
 
-    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-    if (userData.user.email === adminEmail) {
+    if (adminData) {
       setIsAdmin(true);
     } else {
       router.push("/dashboard");

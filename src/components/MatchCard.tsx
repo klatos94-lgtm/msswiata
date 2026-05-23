@@ -43,9 +43,9 @@ export default function MatchCard({ match, userPrediction, userId }: MatchCardPr
   const statusText = isFinished ? "Zakończony" : isPast ? "W trakcie" : "Nadchodzący";
 
   return (
-    <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex items-center justify-between mb-3">
-        <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusBadge}`}>
+    <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex items-center justify-between mb-2">
+        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${statusBadge}`}>
           {statusText}
         </span>
         <span className="text-xs text-slate-400">
@@ -58,29 +58,29 @@ export default function MatchCard({ match, userPrediction, userId }: MatchCardPr
         </span>
       </div>
 
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex-1 text-center">
-          <p className="text-2xl mb-1">{getFlag(match.home_team)}</p>
-          <p className="text-slate-800 font-semibold">{match.home_team}</p>
+          <p className="text-lg mb-0.5">{getFlag(match.home_team)}</p>
+          <p className="text-sm text-slate-800 font-semibold">{match.home_team}</p>
         </div>
 
-        <div className="flex items-center gap-3 mx-4">
+        <div className="flex items-center gap-2 mx-3">
           {isFinished && match.home_score !== null ? (
-            <span className="text-3xl font-bold text-slate-800">
+            <span className="text-2xl font-bold text-slate-800">
               {match.home_score} : {match.away_score}
             </span>
           ) : userPrediction ? (
-            <span className="text-sm font-medium text-amber-600 bg-amber-50 px-3 py-1 rounded-full">
+            <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
               Twój typ: {userPrediction.predicted_home}:{userPrediction.predicted_away}
             </span>
           ) : (
-            <span className="text-sm text-slate-400 font-medium">vs</span>
+            <span className="text-xs text-slate-400 font-medium">vs</span>
           )}
         </div>
 
         <div className="flex-1 text-center">
-          <p className="text-2xl mb-1">{getFlag(match.away_team)}</p>
-          <p className="text-slate-800 font-semibold">{match.away_team}</p>
+          <p className="text-lg mb-0.5">{getFlag(match.away_team)}</p>
+          <p className="text-sm text-slate-800 font-semibold">{match.away_team}</p>
         </div>
       </div>
 
@@ -89,7 +89,7 @@ export default function MatchCard({ match, userPrediction, userId }: MatchCardPr
       )}
 
       {userPrediction && isFinished && (
-        <div className="text-center text-sm mt-2">
+        <div className="text-center text-xs">
           <span className="text-slate-500">Zdobyte punkty: </span>
           <span className="text-amber-600 font-bold">
             {userPrediction && "points" in userPrediction

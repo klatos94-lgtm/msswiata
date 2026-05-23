@@ -49,15 +49,15 @@ export default function MatchesPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6 text-slate-800">Mecze</h1>
+      <h1 className="text-xl font-bold mb-4 text-slate-800">Mecze</h1>
 
       {upcoming.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold mb-3 text-emerald-700 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+        <div className="mb-6">
+          <h2 className="text-base font-semibold mb-2 text-emerald-700 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
             Nadchodzące
           </h2>
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             {upcoming.map((match) => (
               <MatchCard
                 key={match.id}
@@ -74,11 +74,11 @@ export default function MatchesPage() {
 
       {finished.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold mb-3 text-slate-500 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-slate-400 inline-block" />
+          <h2 className="text-base font-semibold mb-2 text-slate-500 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block" />
             Zakończone
           </h2>
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             {finished.map((match) => (
               <MatchCard
                 key={match.id}

@@ -30,7 +30,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-gradient-to-br from-slate-50 via-white to-emerald-50 text-slate-800">
         <Navbar />
-        <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-6">
+        <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-4">
           {children}
         </main>
       </body>

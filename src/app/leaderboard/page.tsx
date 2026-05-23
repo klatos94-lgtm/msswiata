@@ -59,8 +59,8 @@ export default function LeaderboardPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6 text-slate-800">Ranking</h1>
-      <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+      <h1 className="text-xl font-bold mb-4 text-slate-800">Ranking</h1>
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm">
         {loading ? (
           <div className="text-center py-8 text-slate-400">Ładowanie...</div>
         ) : (

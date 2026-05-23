@@ -67,15 +67,15 @@ export default function PredictionForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
-      <div className="flex items-center gap-2">
+    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-1.5">
+      <div className="flex items-center gap-1.5">
         <input
           type="number"
           min="0"
           max="20"
           value={home}
           onChange={(e) => setHome(e.target.value)}
-          className="w-16 bg-white text-slate-800 text-center rounded-lg px-2 py-1.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition"
+          className="w-14 bg-white text-slate-800 text-center rounded-lg px-1 py-1 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
           placeholder="0"
         />
         <span className="text-slate-400 font-medium">:</span>
@@ -85,7 +85,7 @@ export default function PredictionForm({
           max="20"
           value={away}
           onChange={(e) => setAway(e.target.value)}
-          className="w-16 bg-white text-slate-800 text-center rounded-lg px-2 py-1.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition"
+          className="w-14 bg-white text-slate-800 text-center rounded-lg px-1 py-1 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
           placeholder="0"
         />
       </div>
@@ -93,7 +93,7 @@ export default function PredictionForm({
       <button
         type="submit"
         disabled={saving}
-        className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white px-5 py-1.5 rounded-lg text-sm font-medium shadow-sm transition"
+        className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white px-4 py-1 rounded-lg text-xs font-medium shadow-sm transition"
       >
         {saving ? "Zapisywanie..." : existingPrediction ? "Zmień typ" : "Obstaw"}
       </button>

@@ -67,25 +67,25 @@ export default function PredictionForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-1.5">
-      <div className="flex items-center gap-1.5">
+    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-1">
+      <div className="flex items-center gap-1">
         <input
           type="number"
           min="0"
           max="20"
           value={home}
           onChange={(e) => setHome(e.target.value)}
-          className="w-14 bg-white text-slate-800 text-center rounded-lg px-1 py-1 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
+          className="w-10 bg-white text-slate-800 text-center rounded px-1 py-0.5 border border-slate-300 focus:ring-1 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-xs"
           placeholder="0"
         />
-        <span className="text-slate-400 font-medium">:</span>
+        <span className="text-slate-400 text-xs font-medium">:</span>
         <input
           type="number"
           min="0"
           max="20"
           value={away}
           onChange={(e) => setAway(e.target.value)}
-          className="w-14 bg-white text-slate-800 text-center rounded-lg px-1 py-1 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
+          className="w-10 bg-white text-slate-800 text-center rounded px-1 py-0.5 border border-slate-300 focus:ring-1 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-xs"
           placeholder="0"
         />
       </div>
@@ -93,12 +93,12 @@ export default function PredictionForm({
       <button
         type="submit"
         disabled={saving}
-        className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white px-4 py-1 rounded-lg text-xs font-medium shadow-sm transition"
+        className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white px-3 py-0.5 rounded text-[10px] font-medium shadow-sm transition"
       >
-        {saving ? "Zapisywanie..." : existingPrediction ? "Zmień typ" : "Obstaw"}
+        {saving ? "..." : existingPrediction ? "Zmień" : "Obstaw"}
       </button>
 
-      {message && <p className="text-xs text-emerald-600 font-medium">{message}</p>}
+      {message && <p className="text-[10px] text-emerald-600 font-medium">{message}</p>}
     </form>
   );
 }

@@ -96,12 +96,12 @@ export default function AdminPage() {
   if (!isAdmin) return null;
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <h1 className="text-xl font-bold mb-4 text-slate-800">Panel Admina</h1>
 
       <button
         onClick={() => setShowAddForm(!showAddForm)}
-        className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-medium shadow-sm transition text-sm"
+        className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 text-sm"
       >
         {showAddForm ? "Anuluj" : "+ Dodaj mecz"}
       </button>
@@ -109,7 +109,7 @@ export default function AdminPage() {
       {showAddForm && (
         <form
           onSubmit={handleAddMatch}
-          className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm my-3 grid gap-2 max-w-md"
+          className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm my-3 grid gap-2.5 max-w-md animate-slide-up"
         >
           <input
             type="text"
@@ -117,7 +117,7 @@ export default function AdminPage() {
             value={homeTeam}
             onChange={(e) => setHomeTeam(e.target.value)}
             required
-            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-1.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
+            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
           />
           <input
             type="text"
@@ -125,18 +125,18 @@ export default function AdminPage() {
             value={awayTeam}
             onChange={(e) => setAwayTeam(e.target.value)}
             required
-            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-1.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
+            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
           />
           <input
             type="datetime-local"
             value={matchDate}
             onChange={(e) => setMatchDate(e.target.value)}
             required
-            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-1.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
+            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
           />
           <button
             type="submit"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-lg font-medium shadow-sm transition text-sm"
+            className="bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 text-sm"
           >
             Zapisz mecz
           </button>
@@ -171,7 +171,7 @@ function MatchAdminCard({
   );
 
   return (
-    <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+    <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <p className="text-slate-800 text-sm font-semibold">{match.home_team}</p>
@@ -185,7 +185,7 @@ function MatchAdminCard({
             disabled={match.finished}
             className="w-12 bg-slate-50 text-slate-800 text-center rounded-lg px-1 py-1 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition text-sm"
           />
-          <span className="text-slate-400 font-medium">:</span>
+          <span className="text-slate-400 font-semibold">:</span>
           <input
             type="number"
             min="0"
@@ -210,12 +210,12 @@ function MatchAdminCard({
               onFinish(match.id, parseInt(homeScore) || 0, parseInt(awayScore) || 0)
             }
             disabled={!homeScore || !awayScore}
-            className="bg-amber-100 hover:bg-amber-200 disabled:bg-slate-100 text-amber-700 disabled:text-slate-400 px-2.5 py-0.5 rounded-lg font-medium transition text-xs"
+            className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:bg-slate-200 text-white disabled:text-slate-400 px-3 py-1 rounded-lg font-semibold transition-all duration-200 text-xs shadow-sm"
           >
             Zakończ mecz
           </button>
         ) : (
-          <span className="text-emerald-600 font-medium text-xs">✓ Zakończony</span>
+          <span className="text-emerald-600 font-semibold text-xs bg-emerald-50 px-2 py-0.5 rounded-full">✓ Zakończony</span>
         )}
       </div>
     </div>

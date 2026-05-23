@@ -49,10 +49,10 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-[70vh]">
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-lg w-full max-w-sm">
-        <div className="text-center mb-4">
+      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-lg w-full max-w-sm animate-fade-in">
+        <div className="text-center mb-5">
           <span className="text-3xl">⚽</span>
-          <h2 className="text-xl font-bold text-slate-800 mt-1">
+          <h2 className="text-xl font-bold text-slate-800 mt-2">
             {mode === "login" ? "Zaloguj się" : "Zarejestruj się"}
           </h2>
         </div>
@@ -64,7 +64,7 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
+            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
           />
 
           {mode === "register" && (
@@ -73,7 +73,7 @@ export default function LoginPage() {
               placeholder="Nick (opcjonalnie)"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
-              className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
+              className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
             />
           )}
 
@@ -84,7 +84,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
+            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
           />
 
           {error && <p className="text-red-500 text-xs font-medium">{error}</p>}
@@ -92,7 +92,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white rounded-lg px-4 py-2 font-medium shadow-sm transition text-sm"
+            className="bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] disabled:bg-emerald-300 text-white rounded-lg px-4 py-2.5 font-semibold shadow-sm transition-all duration-200 text-sm"
           >
             {loading
               ? "Proszę czekać..."
@@ -102,7 +102,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-3 text-center text-xs text-slate-500">
+        <p className="mt-4 text-center text-xs text-slate-500">
           {mode === "login" ? (
             <>
               Nie masz konta?{" "}

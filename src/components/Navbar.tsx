@@ -28,31 +28,31 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-lg border-b border-slate-200/60 shadow-sm">
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-xl font-bold text-emerald-700">
-            ⚽ World Cup Betting
+        <div className="flex items-center justify-between h-14">
+          <Link href="/" className="text-lg font-bold text-emerald-700 hover:text-emerald-800 transition-colors tracking-tight">
+            ⚽ <span className="hidden sm:inline">World Cup Betting</span><span className="sm:hidden">Typy</span>
           </Link>
 
-          <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-1 sm:gap-3 text-sm">
             {user ? (
               <>
-                <Link href="/dashboard" className="text-slate-600 hover:text-emerald-700 font-medium transition">
+                <Link href="/dashboard" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
                   Dashboard
                 </Link>
-                <Link href="/matches" className="text-slate-600 hover:text-emerald-700 font-medium transition">
+                <Link href="/matches" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
                   Mecze
                 </Link>
-                <Link href="/leaderboard" className="text-slate-600 hover:text-emerald-700 font-medium transition">
+                <Link href="/leaderboard" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
                   Ranking
                 </Link>
-                <Link href="/admin" className="text-slate-600 hover:text-emerald-700 font-medium transition">
+                <Link href="/admin" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
                   Admin
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-lg font-medium transition"
+                  className="bg-red-50 hover:bg-red-100 active:scale-95 text-red-600 px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm"
                 >
                   Wyloguj
                 </button>
@@ -60,7 +60,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium shadow-sm transition"
+                className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-1.5 rounded-lg font-medium shadow-sm transition-all duration-200"
               >
                 Zaloguj
               </Link>

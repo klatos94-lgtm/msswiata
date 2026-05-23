@@ -58,9 +58,9 @@ export default function LeaderboardPage() {
   };
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <h1 className="text-xl font-bold mb-4 text-slate-800">Ranking</h1>
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         {loading ? (
           <div className="text-center py-8 text-slate-400">Ładowanie...</div>
         ) : (

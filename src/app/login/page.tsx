@@ -49,10 +49,13 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-[70vh]">
-      <div className="bg-gray-800 p-8 rounded-lg border border-gray-700 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          {mode === "login" ? "Zaloguj się" : "Zarejestruj się"}
-        </h2>
+      <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-lg w-full max-w-md">
+        <div className="text-center mb-6">
+          <span className="text-4xl">⚽</span>
+          <h2 className="text-2xl font-bold text-slate-800 mt-2">
+            {mode === "login" ? "Zaloguj się" : "Zarejestruj się"}
+          </h2>
+        </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
@@ -61,7 +64,7 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="bg-gray-700 text-white rounded px-4 py-2 border border-gray-600"
+            className="bg-slate-50 text-slate-800 rounded-lg px-4 py-2.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition"
           />
 
           {mode === "register" && (
@@ -70,7 +73,7 @@ export default function LoginPage() {
               placeholder="Nick (opcjonalnie)"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
-              className="bg-gray-700 text-white rounded px-4 py-2 border border-gray-600"
+              className="bg-slate-50 text-slate-800 rounded-lg px-4 py-2.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition"
             />
           )}
 
@@ -81,15 +84,15 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="bg-gray-700 text-white rounded px-4 py-2 border border-gray-600"
+            className="bg-slate-50 text-slate-800 rounded-lg px-4 py-2.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition"
           />
 
-          {error && <p className="text-red-400 text-sm">{error}</p>}
+          {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
-            className="bg-green-700 hover:bg-green-600 disabled:bg-green-900 text-white rounded px-4 py-2 font-medium transition"
+            className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white rounded-lg px-4 py-2.5 font-medium shadow-sm transition"
           >
             {loading
               ? "Proszę czekać..."
@@ -99,13 +102,13 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-400">
+        <p className="mt-4 text-center text-sm text-slate-500">
           {mode === "login" ? (
             <>
               Nie masz konta?{" "}
               <button
                 onClick={() => setMode("register")}
-                className="text-blue-400 hover:underline"
+                className="text-emerald-600 hover:text-emerald-700 font-medium hover:underline"
               >
                 Zarejestruj się
               </button>
@@ -115,7 +118,7 @@ export default function LoginPage() {
               Masz już konto?{" "}
               <button
                 onClick={() => setMode("login")}
-                className="text-blue-400 hover:underline"
+                className="text-emerald-600 hover:text-emerald-700 font-medium hover:underline"
               >
                 Zaloguj się
               </button>

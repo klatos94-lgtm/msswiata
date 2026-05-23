@@ -121,19 +121,19 @@ export default function AdminPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Panel Admina</h1>
+      <h1 className="text-2xl font-bold mb-6 text-slate-800">Panel Admina</h1>
 
       <button
         onClick={() => setShowAddForm(!showAddForm)}
-        className="bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded mb-6 transition"
+        className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium shadow-sm transition"
       >
-        {showAddForm ? "Anuluj" : "Dodaj mecz"}
+        {showAddForm ? "Anuluj" : "+ Dodaj mecz"}
       </button>
 
       {showAddForm && (
         <form
           onSubmit={handleAddMatch}
-          className="bg-gray-800 p-4 rounded-lg border border-gray-700 mb-6 grid gap-3 max-w-md"
+          className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-6 grid gap-3 max-w-md"
         >
           <input
             type="text"
@@ -141,7 +141,7 @@ export default function AdminPage() {
             value={homeTeam}
             onChange={(e) => setHomeTeam(e.target.value)}
             required
-            className="bg-gray-700 text-white rounded px-3 py-2 border border-gray-600"
+            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition"
           />
           <input
             type="text"
@@ -149,25 +149,25 @@ export default function AdminPage() {
             value={awayTeam}
             onChange={(e) => setAwayTeam(e.target.value)}
             required
-            className="bg-gray-700 text-white rounded px-3 py-2 border border-gray-600"
+            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition"
           />
           <input
             type="datetime-local"
             value={matchDate}
             onChange={(e) => setMatchDate(e.target.value)}
             required
-            className="bg-gray-700 text-white rounded px-3 py-2 border border-gray-600"
+            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition"
           />
           <button
             type="submit"
-            className="bg-green-700 hover:bg-green-600 text-white px-4 py-2 rounded transition"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium shadow-sm transition"
           >
             Zapisz mecz
           </button>
         </form>
       )}
 
-      <div className="grid gap-3">
+      <div className="grid gap-3 mt-6">
         {matches.map((match) => (
           <MatchAdminCard
             key={match.id}
@@ -195,10 +195,10 @@ function MatchAdminCard({
   );
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+    <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-white font-semibold">{match.home_team}</p>
+          <p className="text-slate-800 font-semibold">{match.home_team}</p>
         </div>
         <div className="flex items-center gap-2 mx-4">
           <input
@@ -207,24 +207,24 @@ function MatchAdminCard({
             value={homeScore}
             onChange={(e) => setHomeScore(e.target.value)}
             disabled={match.finished}
-            className="w-14 bg-gray-700 text-white text-center rounded px-2 py-1 border border-gray-600"
+            className="w-14 bg-slate-50 text-slate-800 text-center rounded-lg px-2 py-1.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition"
           />
-          <span className="text-gray-400">:</span>
+          <span className="text-slate-400 font-medium">:</span>
           <input
             type="number"
             min="0"
             value={awayScore}
             onChange={(e) => setAwayScore(e.target.value)}
             disabled={match.finished}
-            className="w-14 bg-gray-700 text-white text-center rounded px-2 py-1 border border-gray-600"
+            className="w-14 bg-slate-50 text-slate-800 text-center rounded-lg px-2 py-1.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition"
           />
         </div>
         <div className="flex-1 text-right">
-          <p className="text-white font-semibold">{match.away_team}</p>
+          <p className="text-slate-800 font-semibold">{match.away_team}</p>
         </div>
       </div>
 
-      <div className="flex items-center justify-between mt-3 text-xs text-gray-400">
+      <div className="flex items-center justify-between mt-3 text-xs text-slate-500">
         <span>
           {new Date(match.match_date).toLocaleDateString("pl-PL")}
         </span>
@@ -234,12 +234,12 @@ function MatchAdminCard({
               onFinish(match.id, parseInt(homeScore) || 0, parseInt(awayScore) || 0)
             }
             disabled={!homeScore || !awayScore}
-            className="bg-yellow-700 hover:bg-yellow-600 disabled:bg-gray-700 text-white px-3 py-1 rounded transition"
+            className="bg-amber-100 hover:bg-amber-200 disabled:bg-slate-100 text-amber-700 disabled:text-slate-400 px-3 py-1 rounded-lg font-medium transition"
           >
             Zakończ mecz
           </button>
         ) : (
-          <span className="text-green-400">Zakończony</span>
+          <span className="text-emerald-600 font-medium">✓ Zakończony</span>
         )}
       </div>
     </div>

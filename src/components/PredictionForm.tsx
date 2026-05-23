@@ -75,17 +75,17 @@ export default function PredictionForm({
           max="20"
           value={home}
           onChange={(e) => setHome(e.target.value)}
-          className="w-16 bg-gray-700 text-white text-center rounded px-2 py-1 border border-gray-600"
+          className="w-16 bg-white text-slate-800 text-center rounded-lg px-2 py-1.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition"
           placeholder="0"
         />
-        <span className="text-gray-400">:</span>
+        <span className="text-slate-400 font-medium">:</span>
         <input
           type="number"
           min="0"
           max="20"
           value={away}
           onChange={(e) => setAway(e.target.value)}
-          className="w-16 bg-gray-700 text-white text-center rounded px-2 py-1 border border-gray-600"
+          className="w-16 bg-white text-slate-800 text-center rounded-lg px-2 py-1.5 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition"
           placeholder="0"
         />
       </div>
@@ -93,12 +93,12 @@ export default function PredictionForm({
       <button
         type="submit"
         disabled={saving}
-        className="bg-blue-700 hover:bg-blue-600 disabled:bg-blue-900 text-white px-4 py-1 rounded text-sm transition"
+        className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white px-5 py-1.5 rounded-lg text-sm font-medium shadow-sm transition"
       >
         {saving ? "Zapisywanie..." : existingPrediction ? "Zmień typ" : "Obstaw"}
       </button>
 
-      {message && <p className="text-xs text-green-400">{message}</p>}
+      {message && <p className="text-xs text-emerald-600 font-medium">{message}</p>}
     </form>
   );
 }

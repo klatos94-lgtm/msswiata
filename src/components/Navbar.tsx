@@ -28,31 +28,31 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-gray-900 border-b border-gray-800">
+    <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-lg border-b border-slate-200/60 shadow-sm">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-xl font-bold text-white">
-            World Cup Betting
+          <Link href="/" className="text-xl font-bold text-emerald-700">
+            ⚽ World Cup Betting
           </Link>
 
           <div className="flex items-center gap-4 text-sm">
             {user ? (
               <>
-                <Link href="/dashboard" className="text-gray-300 hover:text-white transition">
+                <Link href="/dashboard" className="text-slate-600 hover:text-emerald-700 font-medium transition">
                   Dashboard
                 </Link>
-                <Link href="/matches" className="text-gray-300 hover:text-white transition">
+                <Link href="/matches" className="text-slate-600 hover:text-emerald-700 font-medium transition">
                   Mecze
                 </Link>
-                <Link href="/leaderboard" className="text-gray-300 hover:text-white transition">
+                <Link href="/leaderboard" className="text-slate-600 hover:text-emerald-700 font-medium transition">
                   Ranking
                 </Link>
-                <Link href="/admin" className="text-gray-300 hover:text-white transition">
+                <Link href="/admin" className="text-slate-600 hover:text-emerald-700 font-medium transition">
                   Admin
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="bg-red-700 hover:bg-red-600 text-white px-4 py-2 rounded transition"
+                  className="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-lg font-medium transition"
                 >
                   Wyloguj
                 </button>
@@ -60,7 +60,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="bg-green-700 hover:bg-green-600 text-white px-4 py-2 rounded transition"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium shadow-sm transition"
               >
                 Zaloguj
               </Link>

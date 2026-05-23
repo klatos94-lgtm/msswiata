@@ -49,11 +49,12 @@ export default function MatchesPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Mecze</h1>
+      <h1 className="text-2xl font-bold mb-6 text-slate-800">Mecze</h1>
 
       {upcoming.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-lg font-semibold mb-3 text-yellow-400">
+          <h2 className="text-lg font-semibold mb-3 text-emerald-700 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
             Nadchodzące
           </h2>
           <div className="grid gap-4">
@@ -73,7 +74,8 @@ export default function MatchesPage() {
 
       {finished.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold mb-3 text-gray-400">
+          <h2 className="text-lg font-semibold mb-3 text-slate-500 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-slate-400 inline-block" />
             Zakończone
           </h2>
           <div className="grid gap-4">

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabaseClient } from "@/lib/supabase";
 import type { Match } from "@/types/match";
-import { calculatePoints } from "@/lib/points";
+
 
 export default function AdminPage() {
   const router = useRouter();
@@ -85,36 +85,13 @@ export default function AdminPage() {
       .update({ home_score: homeScore, away_score: awayScore, finished: true })
       .eq("id", matchId);
 
-    recalculatePoints(matchId, homeScore, awayScore);
+    await supabase.rpc("calculate_match_points", {
+      match_id: matchId,
+      home_score: homeScore,
+      away_score: awayScore,
+    });
+
     loadMatches();
-  };
-
-  const recalculatePoints = async (
-    matchId: string,
-    homeScore: number,
-    awayScore: number
-  ) => {
-    const supabase = getSupabaseClient();
-    const { data: predictions } = await supabase
-      .from("predictions")
-      .select("*")
-      .eq("match_id", matchId);
-
-    if (!predictions) return;
-
-    for (const prediction of predictions) {
-      const points = calculatePoints(
-        prediction.predicted_home,
-        prediction.predicted_away,
-        homeScore,
-        awayScore
-      );
-
-      await supabase
-        .from("predictions")
-        .update({ points })
-        .eq("id", prediction.id);
-    }
   };
 
   if (!isAdmin) return null;

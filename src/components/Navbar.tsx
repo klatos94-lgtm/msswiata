@@ -62,6 +62,9 @@ export default function Navbar() {
                 <Link href="/leaderboard" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
                   Ranking
                 </Link>
+                <Link href="/tabela" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
+                  Tabela
+                </Link>
                 <Link href="/regulamin" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
                   Regulamin
                 </Link>

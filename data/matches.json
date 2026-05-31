@@ -70,5 +70,8 @@
   { "round": 3, "home_team": "DR Konga", "away_team": "Uzbekistan", "match_date": "2026-06-27T23:30:00Z" },
   { "round": 3, "home_team": "Kolumbia", "away_team": "Portugalia", "match_date": "2026-06-27T23:30:00Z" },
   { "round": 3, "home_team": "Algieria", "away_team": "Austria", "match_date": "2026-06-28T02:00:00Z" },
-  { "round": 3, "home_team": "Jordania", "away_team": "Argentyna", "match_date": "2026-06-28T02:00:00Z" }
+  { "round": 3, "home_team": "Jordania", "away_team": "Argentyna", "match_date": "2026-06-28T02:00:00Z" },
+  { "round": 0, "home_team": "Polska", "away_team": "Niemcy", "match_date": "2026-05-31T18:00:00Z" },
+  { "round": 0, "home_team": "Brazylia", "away_team": "Argentyna", "match_date": "2026-05-31T18:00:00Z" },
+  { "round": 0, "home_team": "Anglia", "away_team": "Francja", "match_date": "2026-05-31T18:00:00Z" }
 ]

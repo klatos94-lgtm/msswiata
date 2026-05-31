@@ -128,7 +128,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="bg-white rounded-xl p-3.5 border border-slate-200 shadow-sm">
-          <p className="text-slate-500 text-[10px] font-semibold uppercase tracking-wider">Trafione rezultaty</p>
+          <p className="text-slate-500 text-[10px] font-semibold uppercase tracking-wider">Trafione wyniki</p>
           <p className="text-2xl font-bold text-emerald-600 mt-0.5 tabular-nums">{correctResults}</p>
           <p className="text-[10px] text-slate-400 mt-0.5">1 pkt za trafiony rezultat</p>
         </div>

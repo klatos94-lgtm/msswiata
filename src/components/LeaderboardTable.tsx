@@ -2,11 +2,12 @@ import type { LeaderboardEntry } from "@/types/user";
 
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[];
+  onSelect?: (userId: string) => void;
 }
 
 const medals = ["🥇", "🥈", "🥉"];
 
-export default function LeaderboardTable({ entries }: LeaderboardTableProps) {
+export default function LeaderboardTable({ entries, onSelect }: LeaderboardTableProps) {
   if (entries.length === 0) {
     return (
       <div className="text-center py-8 text-slate-400">
@@ -31,7 +32,7 @@ export default function LeaderboardTable({ entries }: LeaderboardTableProps) {
               ? "bg-amber-50/50 border-b border-amber-200 hover:bg-amber-100/50"
               : "border-b border-slate-100 hover:bg-emerald-50/50";
             return (
-              <tr key={entry.user_id} className={`transition-colors duration-150 ${rowClass}`}>
+              <tr key={entry.user_id} onClick={() => onSelect?.(entry.user_id)} className={`cursor-pointer transition-colors duration-150 ${rowClass}`}>
                 <td className="py-3 pr-4">
                   {index < 3 ? (
                     <span className="text-xl">{medals[index]}</span>

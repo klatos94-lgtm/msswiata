@@ -59,6 +59,9 @@ export default function Navbar() {
                 <Link href="/matches" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
                   Mecze
                 </Link>
+                <Link href="/testowe" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
+                  Testowe
+                </Link>
                 <Link href="/leaderboard" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
                   Ranking
                 </Link>

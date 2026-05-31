@@ -145,6 +145,7 @@ export default function MatchesPage() {
     const { data: matchesData } = await supabase
       .from("matches")
       .select("*")
+      .neq("round", 0)
       .order("match_date", { ascending: true });
     if (matchesData) setMatches(matchesData);
 

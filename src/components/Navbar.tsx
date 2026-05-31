@@ -9,17 +9,32 @@ import type { User } from "@supabase/supabase-js";
 export default function Navbar() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const supabase = getSupabaseClient();
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+      if (data.user) checkAdmin(data.user.id);
+    });
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user) checkAdmin(session.user.id);
     });
 
     return () => listener?.subscription.unsubscribe();
   }, []);
+
+  const checkAdmin = async (userId: string) => {
+    const supabase = getSupabaseClient();
+    const { data } = await supabase
+      .from("admins")
+      .select("user_id")
+      .eq("user_id", userId)
+      .single();
+    setIsAdmin(!!data);
+  };
 
   const handleLogout = async () => {
     const supabase = getSupabaseClient();
@@ -47,9 +62,14 @@ export default function Navbar() {
                 <Link href="/leaderboard" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
                   Ranking
                 </Link>
-                <Link href="/admin" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
-                  Admin
+                <Link href="/regulamin" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
+                  Regulamin
                 </Link>
+                {isAdmin && (
+                  <Link href="/admin" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
+                    Admin
+                  </Link>
+                )}
                 <button
                   onClick={handleLogout}
                   className="bg-red-50 hover:bg-red-100 active:scale-95 text-red-600 px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm"

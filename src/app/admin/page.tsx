@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import { getSupabaseClient } from "@/lib/supabase";
 import type { Match } from "@/types/match";
 
-
 export default function AdminPage() {
   const router = useRouter();
   const [matches, setMatches] = useState<Match[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [seeding, setSeeding] = useState(false);
+  const [seedMsg, setSeedMsg] = useState("");
 
   const [homeTeam, setHomeTeam] = useState("");
   const [awayTeam, setAwayTeam] = useState("");
@@ -49,6 +50,24 @@ export default function AdminPage() {
       .select("*")
       .order("match_date", { ascending: true });
     if (data) setMatches(data);
+  };
+
+  const handleSeed = async () => {
+    setSeeding(true);
+    setSeedMsg("");
+    try {
+      const res = await fetch("/api/seed", { method: "POST" });
+      const data = await res.json();
+      if (data.success) {
+        setSeedMsg(`Wstawiono ${data.count} meczów!`);
+        loadMatches();
+      } else {
+        setSeedMsg("Błąd: " + (data.error || "nieznany"));
+      }
+    } catch {
+      setSeedMsg("Błąd sieci");
+    }
+    setSeeding(false);
   };
 
   const handleAddMatch = async (e: React.FormEvent) => {
@@ -97,14 +116,36 @@ export default function AdminPage() {
 
   return (
     <div className="animate-fade-in">
-      <h1 className="text-xl font-bold mb-4 text-slate-800">Panel Admina</h1>
+      <div className="bg-[#001e28] rounded-xl overflow-hidden shadow-lg mb-6">
+        <div className="flex items-center gap-3 px-5 py-4">
+          <div className="w-9 h-9 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+            <span className="text-xl">⚙️</span>
+          </div>
+          <div>
+            <h1 className="text-white font-bold text-base leading-tight">Panel Admina</h1>
+            <p className="text-emerald-400 text-[11px] font-medium">Zarządzanie meczami</p>
+          </div>
+        </div>
+      </div>
 
-      <button
-        onClick={() => setShowAddForm(!showAddForm)}
-        className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 text-sm"
-      >
-        {showAddForm ? "Anuluj" : "+ Dodaj mecz"}
-      </button>
+      <div className="flex flex-wrap gap-2 mb-4">
+        <button
+          onClick={() => setShowAddForm(!showAddForm)}
+          className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 text-sm"
+        >
+          {showAddForm ? "Anuluj" : "+ Dodaj mecz"}
+        </button>
+        <button
+          onClick={handleSeed}
+          disabled={seeding}
+          className="bg-[#001e28] hover:bg-[#002a38] active:scale-95 disabled:opacity-50 text-white px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 text-sm"
+        >
+          {seeding ? "..." : "⚡ Seed dane"}
+        </button>
+        {seedMsg && (
+          <span className="text-xs text-emerald-600 font-medium self-center">{seedMsg}</span>
+        )}
+      </div>
 
       {showAddForm && (
         <form

@@ -14,6 +14,7 @@ CREATE TABLE matches (
   home_team TEXT NOT NULL,
   away_team TEXT NOT NULL,
   match_date TIMESTAMPTZ NOT NULL,
+  round INTEGER DEFAULT 1,
   home_score INTEGER,
   away_score INTEGER,
   finished BOOLEAN DEFAULT FALSE,
@@ -72,6 +73,7 @@ CREATE POLICY "users_update" ON users FOR UPDATE USING (auth.uid() = id);
 CREATE POLICY "matches_select" ON matches FOR SELECT USING (TRUE);
 CREATE POLICY "matches_insert" ON matches FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
 CREATE POLICY "matches_update" ON matches FOR UPDATE USING (auth.uid() IS NOT NULL);
+CREATE POLICY "matches_delete" ON matches FOR DELETE USING (auth.uid() IS NOT NULL);
 
 -- Predictions: każdy widzi swoje, może dodawać/edytować swoje
 CREATE POLICY "predictions_select" ON predictions FOR SELECT USING (auth.uid() = user_id);

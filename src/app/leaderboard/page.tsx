@@ -59,7 +59,18 @@ export default function LeaderboardPage() {
 
   return (
     <div className="animate-fade-in">
-      <h1 className="text-xl font-bold mb-4 text-slate-800">Ranking</h1>
+      <div className="bg-[#001e28] rounded-xl overflow-hidden shadow-lg mb-6">
+        <div className="flex items-center gap-3 px-5 py-4">
+          <div className="w-9 h-9 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+            <span className="text-xl">🏆</span>
+          </div>
+          <div>
+            <h1 className="text-white font-bold text-base leading-tight">Ranking</h1>
+            <p className="text-emerald-400 text-[11px] font-medium">Klasyfikacja graczy</p>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         {loading ? (
           <div className="text-center py-8 text-slate-400">Ładowanie...</div>

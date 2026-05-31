@@ -1,0 +1,507 @@
+Kolejka 1
+11.06. 21:00
+Meksyk
+Meksyk
+Republika Południowej Afryki
+Republika Południowej Afryki
+-
+-
+12.06. 04:00
+Korea Południowa
+Korea Południowa
+Czechy
+Czechy
+-
+-
+12.06. 21:00
+Kanada
+Kanada
+Bośnia i Hercegowina
+Bośnia i Hercegowina
+-
+-
+13.06. 03:00
+USA
+USA
+Paragwaj
+Paragwaj
+-
+-
+13.06. 21:00
+Katar
+Katar
+Szwajcaria
+Szwajcaria
+-
+-
+14.06. 00:00
+Brazylia
+Brazylia
+Maroko
+Maroko
+-
+-
+14.06. 03:00
+Haiti
+Haiti
+Szkocja
+Szkocja
+-
+-
+14.06. 06:00
+Australia
+Australia
+Turcja
+Turcja
+-
+-
+14.06. 19:00
+Niemcy
+Niemcy
+Curacao
+Curacao
+-
+-
+14.06. 22:00
+Holandia
+Holandia
+Japonia
+Japonia
+-
+-
+15.06. 01:00
+Wybrzeże Kości Słoniowej
+Wybrzeże Kości Słoniowej
+Ekwador
+Ekwador
+-
+-
+15.06. 04:00
+Szwecja
+Szwecja
+Tunezja
+Tunezja
+-
+-
+15.06. 18:00
+Hiszpania
+Hiszpania
+Republika Zielonego Przylądka
+Republika Zielonego Przylądka
+-
+-
+15.06. 21:00
+Belgia
+Belgia
+Egipt
+Egipt
+-
+-
+16.06. 00:00
+Arabia Saudyjska
+Arabia Saudyjska
+Urugwaj
+Urugwaj
+-
+-
+16.06. 03:00
+Iran
+Iran
+Nowa Zelandia
+Nowa Zelandia
+-
+-
+16.06. 21:00
+Francja
+Francja
+Senegal
+Senegal
+-
+-
+17.06. 00:00
+Irak
+Irak
+Norwegia
+Norwegia
+-
+-
+17.06. 03:00
+Argentyna
+Argentyna
+Algieria
+Algieria
+-
+-
+17.06. 06:00
+Austria
+Austria
+Jordania
+Jordania
+-
+-
+17.06. 19:00
+Portugalia
+Portugalia
+DR Konga
+DR Konga
+-
+-
+17.06. 22:00
+Anglia
+Anglia
+Chorwacja
+Chorwacja
+-
+-
+18.06. 01:00
+Ghana
+Ghana
+Panama
+Panama
+-
+-
+18.06. 04:00
+Uzbekistan
+Uzbekistan
+Kolumbia
+Kolumbia
+-
+-
+Kolejka 2
+18.06. 18:00
+Czechy
+Czechy
+Republika Południowej Afryki
+Republika Południowej Afryki
+-
+-
+18.06. 21:00
+Szwajcaria
+Szwajcaria
+Bośnia i Hercegowina
+Bośnia i Hercegowina
+-
+-
+19.06. 00:00
+Kanada
+Kanada
+Katar
+Katar
+-
+-
+19.06. 03:00
+Meksyk
+Meksyk
+Korea Południowa
+Korea Południowa
+-
+-
+19.06. 21:00
+USA
+USA
+Australia
+Australia
+-
+-
+20.06. 00:00
+Szkocja
+Szkocja
+Maroko
+Maroko
+-
+-
+20.06. 02:30
+Brazylia
+Brazylia
+Haiti
+Haiti
+-
+-
+20.06. 05:00
+Turcja
+Turcja
+Paragwaj
+Paragwaj
+-
+-
+20.06. 19:00
+Holandia
+Holandia
+Szwecja
+Szwecja
+-
+-
+20.06. 22:00
+Niemcy
+Niemcy
+Wybrzeże Kości Słoniowej
+Wybrzeże Kości Słoniowej
+-
+-
+21.06. 02:00
+Ekwador
+Ekwador
+Curacao
+Curacao
+-
+-
+21.06. 06:00
+Tunezja
+Tunezja
+Japonia
+Japonia
+-
+-
+21.06. 18:00
+Hiszpania
+Hiszpania
+Arabia Saudyjska
+Arabia Saudyjska
+-
+-
+21.06. 21:00
+Belgia
+Belgia
+Iran
+Iran
+-
+-
+22.06. 00:00
+Urugwaj
+Urugwaj
+Republika Zielonego Przylądka
+Republika Zielonego Przylądka
+-
+-
+22.06. 03:00
+Nowa Zelandia
+Nowa Zelandia
+Egipt
+Egipt
+-
+-
+22.06. 19:00
+Argentyna
+Argentyna
+Austria
+Austria
+-
+-
+22.06. 23:00
+Francja
+Francja
+Irak
+Irak
+-
+-
+23.06. 02:00
+Norwegia
+Norwegia
+Senegal
+Senegal
+-
+-
+23.06. 05:00
+Jordania
+Jordania
+Algieria
+Algieria
+-
+-
+23.06. 19:00
+Portugalia
+Portugalia
+Uzbekistan
+Uzbekistan
+-
+-
+23.06. 22:00
+Anglia
+Anglia
+Ghana
+Ghana
+-
+-
+24.06. 01:00
+Panama
+Panama
+Chorwacja
+Chorwacja
+-
+-
+24.06. 04:00
+Kolumbia
+Kolumbia
+DR Konga
+DR Konga
+-
+-
+Kolejka 3
+24.06. 21:00
+Bośnia i Hercegowina
+Bośnia i Hercegowina
+Katar
+Katar
+-
+-
+24.06. 21:00
+Szwajcaria
+Szwajcaria
+Kanada
+Kanada
+-
+-
+25.06. 00:00
+Maroko
+Maroko
+Haiti
+Haiti
+-
+-
+25.06. 00:00
+Szkocja
+Szkocja
+Brazylia
+Brazylia
+-
+-
+25.06. 03:00
+Czechy
+Czechy
+Meksyk
+Meksyk
+-
+-
+25.06. 03:00
+Republika Południowej Afryki
+Republika Południowej Afryki
+Korea Południowa
+Korea Południowa
+-
+-
+25.06. 22:00
+Curacao
+Curacao
+Wybrzeże Kości Słoniowej
+Wybrzeże Kości Słoniowej
+-
+-
+25.06. 22:00
+Ekwador
+Ekwador
+Niemcy
+Niemcy
+-
+-
+26.06. 01:00
+Japonia
+Japonia
+Szwecja
+Szwecja
+-
+-
+26.06. 01:00
+Tunezja
+Tunezja
+Holandia
+Holandia
+-
+-
+26.06. 04:00
+Paragwaj
+Paragwaj
+Australia
+Australia
+-
+-
+26.06. 04:00
+Turcja
+Turcja
+USA
+USA
+-
+-
+26.06. 21:00
+Norwegia
+Norwegia
+Francja
+Francja
+-
+-
+26.06. 21:00
+Senegal
+Senegal
+Irak
+Irak
+-
+-
+27.06. 02:00
+Republika Zielonego Przylądka
+Republika Zielonego Przylądka
+Arabia Saudyjska
+Arabia Saudyjska
+-
+-
+27.06. 02:00
+Urugwaj
+Urugwaj
+Hiszpania
+Hiszpania
+-
+-
+27.06. 05:00
+Egipt
+Egipt
+Iran
+Iran
+-
+-
+27.06. 05:00
+Nowa Zelandia
+Nowa Zelandia
+Belgia
+Belgia
+-
+-
+27.06. 23:00
+Chorwacja
+Chorwacja
+Ghana
+Ghana
+-
+-
+27.06. 23:00
+Panama
+Panama
+Anglia
+Anglia
+-
+-
+28.06. 01:30
+DR Konga
+DR Konga
+Uzbekistan
+Uzbekistan
+-
+-
+28.06. 01:30
+Kolumbia
+Kolumbia
+Portugalia
+Portugalia
+-
+-
+28.06. 04:00
+Algieria
+Algieria
+Austria
+Austria
+-
+-
+28.06. 04:00
+Jordania
+Jordania
+Argentyna
+Argentyna
+-
+-

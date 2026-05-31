@@ -85,7 +85,7 @@ export default function MatchCard({ match, userPrediction, userId }: MatchCardPr
       </div>
 
       {!isFinished && !isPast && userId && (
-        <PredictionForm matchId={match.id} userId={userId} existingPrediction={userPrediction} />
+        <PredictionForm matchId={match.id} userId={userId} matchDate={match.match_date} existingPrediction={userPrediction} />
       )}
 
       {userPrediction && isFinished && (

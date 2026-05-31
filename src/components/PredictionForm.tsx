@@ -8,6 +8,7 @@ interface PredictionFormProps {
   userId: string;
   matchDate: string;
   existingPrediction?: { predicted_home: number; predicted_away: number } | null;
+  onSave?: () => void;
 }
 
 export default function PredictionForm({
@@ -15,6 +16,7 @@ export default function PredictionForm({
   userId,
   matchDate,
   existingPrediction,
+  onSave,
 }: PredictionFormProps) {
   const [home, setHome] = useState(existingPrediction?.predicted_home?.toString() ?? "");
   const [away, setAway] = useState(existingPrediction?.predicted_away?.toString() ?? "");
@@ -56,6 +58,7 @@ export default function PredictionForm({
         setMessage("Błąd zapisu: " + error.message);
       } else {
         setMessage("Zaktualizowano!");
+        onSave?.();
       }
     } else {
       const { error } = await supabase.from("predictions").insert([
@@ -71,6 +74,7 @@ export default function PredictionForm({
         setMessage("Błąd zapisu: " + error.message);
       } else {
         setMessage("Zapisano!");
+        onSave?.();
       }
     }
 

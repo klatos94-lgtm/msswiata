@@ -39,10 +39,12 @@ function MatchRow({
   match,
   pred,
   userId,
+  onSave,
 }: {
   match: Match;
   pred: Prediction | null;
   userId: string;
+  onSave?: () => void;
 }) {
   const matchDate = new Date(match.match_date);
   const now = new Date();
@@ -100,6 +102,7 @@ function MatchRow({
               userId={userId}
               matchDate={match.match_date}
               existingPrediction={pred}
+              onSave={onSave}
             />
           </div>
         )}
@@ -134,11 +137,7 @@ export default function MatchesPage() {
     });
   }, []);
 
-  useEffect(() => {
-    if (!user) return;
-    const interval = setInterval(() => loadData(user.id), 30000);
-    return () => clearInterval(interval);
-  }, [user]);
+
 
   const loadData = async (userId: string) => {
     const supabase = getSupabaseClient();
@@ -238,6 +237,7 @@ export default function MatchesPage() {
                     match={match}
                     pred={pred}
                     userId={user.id}
+                    onSave={() => loadData(user.id)}
                   />
                 );
               })}

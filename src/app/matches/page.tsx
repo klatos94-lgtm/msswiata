@@ -79,9 +79,9 @@ function MatchRow({
           <span className="text-[10px] font-bold text-emerald-600">VS</span>
         )}
 
-        {pred && (isFinished || isPast) && (
-          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded whitespace-nowrap text-slate-500">
-            {pred.predicted_home}:{pred.predicted_away}
+        {pred && (
+          <span className="text-[10px] font-semibold text-slate-600">
+            Twój typ: {pred.predicted_home}:{pred.predicted_away}
           </span>
         )}
 

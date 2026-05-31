@@ -76,7 +76,7 @@ CREATE POLICY "matches_update" ON matches FOR UPDATE USING (auth.uid() IS NOT NU
 CREATE POLICY "matches_delete" ON matches FOR DELETE USING (auth.uid() IS NOT NULL);
 
 -- Predictions: każdy widzi swoje, może dodawać/edytować swoje
-CREATE POLICY "predictions_select" ON predictions FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "predictions_select" ON predictions FOR SELECT USING (auth.uid() IS NOT NULL);
 CREATE POLICY "predictions_insert" ON predictions FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "predictions_update" ON predictions FOR UPDATE USING (auth.uid() = user_id);
 

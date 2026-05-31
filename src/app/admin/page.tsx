@@ -11,7 +11,6 @@ export default function AdminPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [seeding, setSeeding] = useState(false);
-  const [testSeeding, setTestSeeding] = useState(false);
   const [seedMsg, setSeedMsg] = useState("");
 
   const [homeTeam, setHomeTeam] = useState("");
@@ -69,20 +68,6 @@ export default function AdminPage() {
       setSeedMsg("Błąd sieci");
     }
     setSeeding(false);
-  };
-
-  const handleTestSeed = async () => {
-    setTestSeeding(true);
-    setSeedMsg("");
-    try {
-      const res = await fetch("/api/add-test-matches", { method: "POST" });
-      const data = await res.json();
-      setSeedMsg(`Dodano ${data.added} meczów testowych!`);
-      if (data.added > 0) loadMatches();
-    } catch {
-      setSeedMsg("Błąd sieci");
-    }
-    setTestSeeding(false);
   };
 
   const handleAddMatch = async (e: React.FormEvent) => {
@@ -156,13 +141,6 @@ export default function AdminPage() {
           className="bg-[#001e28] hover:bg-[#002a38] active:scale-95 disabled:opacity-50 text-white px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 text-sm"
         >
           {seeding ? "..." : "⚡ Seed dane"}
-        </button>
-        <button
-          onClick={handleTestSeed}
-          disabled={testSeeding}
-          className="bg-amber-600 hover:bg-amber-700 active:scale-95 disabled:opacity-50 text-white px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 text-sm"
-        >
-          {testSeeding ? "..." : "🧪 Dodaj testowe"}
         </button>
         {seedMsg && (
           <span className="text-xs text-emerald-600 font-medium self-center">{seedMsg}</span>

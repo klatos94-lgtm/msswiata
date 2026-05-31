@@ -53,9 +53,11 @@ function MatchRow({
   const time = matchDate.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" });
 
   return (
-    <div className={`flex items-start px-3 py-2.5 gap-2 hover:bg-slate-50/60 transition-colors ${
+    <div className={`flex items-start px-3 py-2.5 gap-2 transition-colors ${
+      pred ? "bg-emerald-50/40" : ""
+    } ${
       isFinished ? "border-2 border-black rounded-lg" : isPast ? "border-2 border-red-400 rounded-lg" : "border-b border-slate-100"
-    } ${isPast ? "mb-1" : ""}`}>
+    } ${isPast ? "mb-1" : ""} hover:bg-slate-50/60`}>
       <div className="w-14 flex-shrink-0 text-center pt-0.5">
         <div className="text-[10px] font-bold text-slate-400 uppercase leading-tight">{day}</div>
         <div className="text-[11px] font-bold text-slate-700 tabular-nums">{time}</div>
@@ -131,6 +133,12 @@ export default function MatchesPage() {
       loadData(data.user.id);
     });
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    const interval = setInterval(() => loadData(user.id), 30000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   const loadData = async (userId: string) => {
     const supabase = getSupabaseClient();

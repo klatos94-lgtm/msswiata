@@ -87,7 +87,7 @@ export default function TabelaPage() {
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-200">
-                  <th className="sticky left-0 bg-white z-10 px-2 py-1.5 text-slate-500 font-semibold uppercase tracking-wider min-w-[200px] border-r border-slate-100">
+                  <th className="sticky left-0 bg-white z-10 px-2 py-1.5 text-slate-500 font-semibold uppercase tracking-wider w-[160px] max-w-[160px] border-r border-slate-100">
                     Data / Mecz
                   </th>
                   {users.map((u) => (
@@ -112,8 +112,8 @@ export default function TabelaPage() {
                   const day = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.`;
                   return (
                     <tr key={match.id} className="border-b border-slate-100 hover:bg-slate-50/60 transition-colors">
-                      <td className="sticky left-0 bg-white z-10 px-2 py-1.5 border-r border-slate-100">
-                        <div className="text-[10px] text-slate-600 font-medium leading-tight whitespace-nowrap">
+                      <td className="sticky left-0 bg-white z-10 px-2 py-1.5 border-r border-slate-100 max-w-[160px]">
+                        <div className="text-[10px] text-slate-600 font-medium leading-snug break-words">
                           <span className="text-slate-400">{day}</span>{" "}
                           <Flag team={match.home_team} /> {match.home_team}{" "}
                           {match.finished ? (

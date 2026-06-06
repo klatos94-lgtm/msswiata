@@ -149,16 +149,16 @@ export default function GrupyPage() {
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider">
-                        <th className="px-2 py-1.5 text-left">#</th>
-                        <th className="px-2 py-1.5 text-left">Drużyna</th>
-                        <th className="px-1.5 py-1.5 text-center">M</th>
-                        <th className="px-1.5 py-1.5 text-center">W</th>
-                        <th className="px-1.5 py-1.5 text-center">R</th>
-                        <th className="px-1.5 py-1.5 text-center">P</th>
-                        <th className="px-1.5 py-1.5 text-center">BZ</th>
-                        <th className="px-1.5 py-1.5 text-center">BS</th>
-                        <th className="px-1.5 py-1.5 text-center">+/-</th>
-                        <th className="px-2 py-1.5 text-center font-bold">Pkt</th>
+                        <th className="px-1 sm:px-2 py-1.5 text-left">#</th>
+                        <th className="px-1 sm:px-2 py-1.5 text-left">Drużyna</th>
+                        <th className="px-1 sm:px-1.5 py-1.5 text-center">M</th>
+                        <th className="px-1 sm:px-1.5 py-1.5 text-center">W</th>
+                        <th className="hidden sm:table-cell px-1 sm:px-1.5 py-1.5 text-center">R</th>
+                        <th className="hidden sm:table-cell px-1 sm:px-1.5 py-1.5 text-center">P</th>
+                        <th className="hidden sm:table-cell px-1 sm:px-1.5 py-1.5 text-center">BZ</th>
+                        <th className="hidden sm:table-cell px-1 sm:px-1.5 py-1.5 text-center">BS</th>
+                        <th className="px-1 sm:px-1.5 py-1.5 text-center">+/-</th>
+                        <th className="px-1 sm:px-2 py-1.5 text-center font-bold">Pkt</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -171,33 +171,33 @@ export default function GrupyPage() {
                               isTop2 ? "bg-emerald-50/40" : ""
                             }`}
                           >
-                            <td className="px-2 py-1.5 text-slate-400 font-medium text-center">
+                            <td className="px-1 sm:px-2 py-1.5 text-slate-400 font-medium text-center">
                               {isTop2 ? (
                                 <span className="text-emerald-600 font-bold">{idx + 1}</span>
                               ) : (
                                 idx + 1
                               )}
                             </td>
-                            <td className="px-2 py-1.5">
+                            <td className="px-1 sm:px-2 py-1.5">
                               <span className="flex items-center gap-1">
                                 <Flag team={entry.team} />
-                                <span className="font-semibold text-slate-700 truncate max-w-[100px]">
-                                  {entry.team.split(" ").pop()}
+                                <span className="font-semibold text-slate-700 truncate max-w-[70px] sm:max-w-[120px]">
+                                  {entry.team}
                                 </span>
                               </span>
                             </td>
-                            <td className="px-1.5 py-1.5 text-center tabular-nums text-slate-600">{entry.pld}</td>
-                            <td className="px-1.5 py-1.5 text-center tabular-nums text-slate-600">{entry.w}</td>
-                            <td className="px-1.5 py-1.5 text-center tabular-nums text-slate-600">{entry.d}</td>
-                            <td className="px-1.5 py-1.5 text-center tabular-nums text-slate-600">{entry.l}</td>
-                            <td className="px-1.5 py-1.5 text-center tabular-nums text-slate-600">{entry.gf}</td>
-                            <td className="px-1.5 py-1.5 text-center tabular-nums text-slate-600">{entry.ga}</td>
-                            <td className={`px-1.5 py-1.5 text-center tabular-nums font-medium ${
+                            <td className="px-1 sm:px-1.5 py-1.5 text-center tabular-nums text-slate-600">{entry.pld}</td>
+                            <td className="px-1 sm:px-1.5 py-1.5 text-center tabular-nums text-slate-600">{entry.w}</td>
+                            <td className="hidden sm:table-cell px-1 sm:px-1.5 py-1.5 text-center tabular-nums text-slate-600">{entry.d}</td>
+                            <td className="hidden sm:table-cell px-1 sm:px-1.5 py-1.5 text-center tabular-nums text-slate-600">{entry.l}</td>
+                            <td className="hidden sm:table-cell px-1 sm:px-1.5 py-1.5 text-center tabular-nums text-slate-600">{entry.gf}</td>
+                            <td className="hidden sm:table-cell px-1 sm:px-1.5 py-1.5 text-center tabular-nums text-slate-600">{entry.ga}</td>
+                            <td className={`px-1 sm:px-1.5 py-1.5 text-center tabular-nums font-medium ${
                               entry.gd > 0 ? "text-emerald-600" : entry.gd < 0 ? "text-red-500" : "text-slate-500"
                             }`}>
                               {entry.gd > 0 ? `+${entry.gd}` : entry.gd}
                             </td>
-                            <td className="px-2 py-1.5 text-center font-bold tabular-nums text-amber-600">{entry.pts}</td>
+                            <td className="px-1 sm:px-2 py-1.5 text-center font-bold tabular-nums text-amber-600">{entry.pts}</td>
                           </tr>
                         );
                       })}

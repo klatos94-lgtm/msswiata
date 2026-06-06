@@ -43,9 +43,10 @@ export default function RegulaminPage() {
         <div>
           <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-2">§3. Wyniki i ranking</h2>
           <ul className="list-disc list-inside text-sm text-slate-600 space-y-1.5">
-            <li>Obstawki są utajnione.</li>
-            <li>Wyniki aktualizują się co 2 godziny w zakładce <strong>Ranking</strong>.</li>
-            <li>Indywidualne statystyki zawodnika wyświetlone są w zakładce <strong>Dashboard</strong>.</li>
+            <li>Obstawki są utajnione. Po rozegranym meczu zostaną wyświetlone w zakładce <strong>Typy</strong>.</li>
+            <li>Wyniki aktualizują się po rozegranym meczu, w przypadku meczy rozgrywających się w nocy wyniki będą aktualizowane ok. godziny 8:00. Wyniki i sytuacja grupowa / drabinka zostaną wyświetlone w zakładce <strong>Grupy</strong>.</li>
+            <li>Rezultaty obstawek są sumowane i wyświetlane w zakładce <strong>Ranking</strong>.</li>
+            <li>Indywidualne statystyki zawodnika są wyświetlane w zakładce <strong>Dashboard</strong>.</li>
           </ul>
         </div>
 

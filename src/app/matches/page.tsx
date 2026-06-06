@@ -183,7 +183,7 @@ export default function MatchesPage() {
             </div>
             <div>
               <h1 className="text-white font-bold text-base leading-tight">Mistrzostwa Świata</h1>
-              <p className="text-emerald-400 text-[11px] font-medium">2026 &middot; Mecze</p>
+              <p className="text-emerald-400 text-[11px] font-medium">2026 &middot; Typy</p>
             </div>
           </div>
         </div>
@@ -191,7 +191,7 @@ export default function MatchesPage() {
         <div className="flex border-t border-white/10">
           {roundKeys.length === 0 ? (
             <div className="px-4 py-2 text-[11px] font-semibold text-slate-400">
-              Mecze
+Typy
             </div>
           ) : (
             roundKeys.map((r) => (

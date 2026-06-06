@@ -17,7 +17,7 @@ export default function RegulaminPage() {
         <div>
           <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-2">§1. Zasady obstawiania</h2>
           <ol className="list-decimal list-inside text-sm text-slate-600 space-y-1.5">
-            <li>Swoje obstawki wykonujemy w zakładce <strong>Mecze</strong>.</li>
+            <li>Swoje obstawki wykonujemy w zakładce <strong>Typy</strong>.</li>
             <li>Punktacja za poprawne obstawki:
               <ul className="list-disc list-inside ml-5 mt-1 text-slate-500 space-y-0.5">
                 <li><strong>3 pkt</strong> za poprawny wynik</li>
@@ -43,7 +43,7 @@ export default function RegulaminPage() {
         <div>
           <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-2">§3. Wyniki i ranking</h2>
           <ul className="list-disc list-inside text-sm text-slate-600 space-y-1.5">
-            <li>Obstawki są utajnione. Po rozegranym meczu zostaną wyświetlone w zakładce <strong>Typy</strong>.</li>
+            <li>Obstawki są utajnione. Po rozegranym meczu zostaną wyświetlone w zakładce <strong>Tabela</strong>.</li>
             <li>Wyniki aktualizują się po rozegranym meczu, w przypadku meczy rozgrywających się w nocy wyniki będą aktualizowane ok. godziny 8:00. Wyniki i sytuacja grupowa / drabinka zostaną wyświetlone w zakładce <strong>Grupy</strong>.</li>
             <li>Rezultaty obstawek są sumowane i wyświetlane w zakładce <strong>Ranking</strong>.</li>
             <li>Indywidualne statystyki zawodnika są wyświetlane w zakładce <strong>Dashboard</strong>.</li>

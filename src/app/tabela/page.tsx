@@ -11,7 +11,6 @@ import Flag from "@/components/Flag";
 interface UserRow {
   id: string;
   nickname: string;
-  email: string;
 }
 
 export default function TabelaPage() {
@@ -36,23 +35,12 @@ export default function TabelaPage() {
 
   const loadData = async () => {
     const supabase = getSupabaseClient();
-
-    const { data: usersData } = await supabase
-      .from("users")
-      .select("id, nickname, email");
-    if (usersData) setUsers(usersData);
-
-    const { data: matchesData } = await supabase
-      .from("matches")
-      .select("*")
-      .order("match_date", { ascending: true });
-    if (matchesData) setMatches(matchesData);
-
-    const { data: predictionsData } = await supabase
-      .from("predictions")
-      .select("*");
-    if (predictionsData) setPredictions(predictionsData);
-
+    const { data } = await supabase.rpc("get_cartesian_table");
+    if (data) {
+      if (Array.isArray(data.users)) setUsers(data.users);
+      if (Array.isArray(data.matches)) setMatches(data.matches);
+      if (Array.isArray(data.predictions)) setPredictions(data.predictions);
+    }
     setLoading(false);
   };
 
@@ -105,7 +93,7 @@ export default function TabelaPage() {
                       }`}
                     >
                       <div className="text-[9px] sm:text-[10px] leading-tight truncate">
-                        {shortenName(u.nickname || u.email?.split("@")[0] || "")}
+                        {shortenName(u.nickname || "User")}
                       </div>
                     </th>
                   ))}

@@ -42,7 +42,7 @@ export default function LeaderboardTable({ entries, onSelect }: LeaderboardTable
                 </td>
                 <td className="py-3 pr-4">
                   <span className={`${index === 0 ? "text-amber-900" : "text-slate-800"} font-medium`}>
-                    {entry.nickname || entry.email}
+                    {entry.nickname}
                   </span>
                 </td>
                 <td className="py-3 text-right">

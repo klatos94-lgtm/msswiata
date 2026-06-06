@@ -46,7 +46,7 @@ export default function AdminPage() {
       { headers }
     );
     const adminRows = await res.json();
-    console.log("admin check:", res.status, adminRows, "uid:", userData.user.id, "session:", !!session);
+
     if (Array.isArray(adminRows) && adminRows.length > 0) {
       setIsAdmin(true);
     } else {

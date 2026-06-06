@@ -14,7 +14,7 @@ export default function LeaderboardPage() {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [selectedUser, setSelectedUser] = useState<{ nickname: string; email: string } | null>(null);
+  const [selectedUser, setSelectedUser] = useState<{ nickname: string } | null>(null);
   const [matches, setMatches] = useState<Match[]>([]);
   const [userPredictions, setUserPredictions] = useState<Prediction[]>([]);
 
@@ -32,45 +32,14 @@ export default function LeaderboardPage() {
 
   const loadLeaderboard = async () => {
     const supabase = getSupabaseClient();
-
-    const { data: predictions } = await supabase
-      .from("predictions")
-      .select("user_id, points");
-
-    if (!predictions) {
-      setLoading(false);
-      return;
+    const { data } = await supabase.rpc("get_leaderboard");
+    if (data) {
+      setEntries(data.map((r: { user_id: string; nickname: string; total_points: number }) => ({
+        user_id: r.user_id,
+        nickname: r.nickname,
+        total_points: r.total_points,
+      })));
     }
-
-    const pointsMap = new Map<string, number>();
-    for (const p of predictions) {
-      pointsMap.set(p.user_id, (pointsMap.get(p.user_id) ?? 0) + (p.points ?? 0));
-    }
-
-    const userIds = Array.from(pointsMap.keys());
-    if (userIds.length === 0) {
-      setLoading(false);
-      return;
-    }
-
-    const { data: users } = await supabase
-      .from("users")
-      .select("id, email, nickname")
-      .in("id", userIds);
-
-    if (users) {
-      const result: LeaderboardEntry[] = users
-        .map((u) => ({
-          user_id: u.id,
-          email: u.email,
-          nickname: u.nickname,
-          total_points: pointsMap.get(u.id) ?? 0,
-        }))
-        .sort((a, b) => b.total_points - a.total_points);
-
-      setEntries(result);
-    }
-
     setLoading(false);
   };
 
@@ -92,19 +61,11 @@ export default function LeaderboardPage() {
     setUserPredictions([]);
 
     const supabase = getSupabaseClient();
-
-    const { data: userData } = await supabase
-      .from("users")
-      .select("nickname, email")
-      .eq("id", userId)
-      .single();
-    if (userData) setSelectedUser(userData);
-
-    const { data: predictions } = await supabase
-      .from("predictions")
-      .select("*")
-      .eq("user_id", userId);
-    if (predictions) setUserPredictions(predictions);
+    const { data } = await supabase.rpc("get_user_detail", { p_user_id: userId });
+    if (data) {
+      setSelectedUser({ nickname: data.nickname });
+      setUserPredictions(data.predictions ?? []);
+    }
   };
 
   const finishedMatches = matches.filter((m) => m.finished);
@@ -136,7 +97,7 @@ export default function LeaderboardPage() {
           <div className="bg-[#001e28] px-4 py-2.5 flex items-center justify-between">
             <div>
               <div className="text-white text-sm font-bold">
-                {selectedUser.nickname || selectedUser.email}
+                {selectedUser.nickname || "Nieznany"}
               </div>
               <div className="text-slate-400 text-[10px] font-medium">
                 Zakończone mecze &middot; {finishedMatches.length} meczów

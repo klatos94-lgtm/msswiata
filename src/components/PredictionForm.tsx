@@ -93,8 +93,8 @@ export default function PredictionForm({
           onSave?.();
         }
       }
-    } catch (err: any) {
-      setMessage("Błąd: " + err.message);
+    } catch (err: unknown) {
+      setMessage("Błąd: " + (err instanceof Error ? err.message : String(err)));
     }
 
     setSaving(false);

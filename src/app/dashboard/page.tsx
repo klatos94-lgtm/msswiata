@@ -18,7 +18,6 @@ export default function DashboardPage() {
   const [totalPoints, setTotalPoints] = useState(0);
   const [correctResults, setCorrectResults] = useState(0);
   const [exactScores, setExactScores] = useState(0);
-  const [allMatches, setAllMatches] = useState<Match[]>([]);
 
   useEffect(() => {
     const supabase = getSupabaseClient();
@@ -34,41 +33,14 @@ export default function DashboardPage() {
 
   const loadData = async (userId: string) => {
     const supabase = getSupabaseClient();
-
-    const { data: profileData } = await supabase
-      .from("users")
-      .select("nickname")
-      .eq("id", userId)
-      .single();
-    if (profileData) setProfile(profileData);
-
-    const { data: matches } = await supabase
-      .from("matches")
-      .select("*")
-      .order("match_date", { ascending: true });
-
-    if (matches) {
-      setAllMatches(matches);
-      const now = new Date();
-      const todayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-      const todayEnd = new Date(todayStart.getTime() + 86400000);
-      const today = matches.filter((m) => {
-        const d = new Date(m.match_date);
-        return d >= todayStart && d < todayEnd;
-      });
-      setTodayMatches(today);
-    }
-
-    const { data: predictions } = await supabase
-      .from("predictions")
-      .select("*")
-      .eq("user_id", userId);
-    if (predictions) {
-      setUserPredictions(predictions);
-      const total = predictions.reduce((sum, p) => sum + (p.points ?? 0), 0);
-      setTotalPoints(total);
-      setCorrectResults(predictions.filter((p) => p.points === 1).length);
-      setExactScores(predictions.filter((p) => p.points === 3).length);
+    const { data } = await supabase.rpc("get_dashboard", { p_user_id: userId });
+    if (data) {
+      setProfile({ nickname: data.nickname });
+      setTotalPoints(data.total_points ?? 0);
+      setCorrectResults(data.correct_results ?? 0);
+      setExactScores(data.exact_scores ?? 0);
+      setTodayMatches(data.today_matches ?? []);
+      setUserPredictions(data.predictions ?? []);
     }
   };
 

@@ -126,28 +126,11 @@ export default function MatchesPage() {
 
   const loadData = async (userId: string) => {
     const supabase = getSupabaseClient();
-    const { data: { session } } = await supabase.auth.getSession();
-
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-      "apikey": anonKey,
-    };
-    if (session?.access_token) {
-      headers["Authorization"] = `Bearer ${session.access_token}`;
+    const { data } = await supabase.rpc("get_matches_with_predictions", { p_user_id: userId });
+    if (data) {
+      if (Array.isArray(data.matches)) setMatches(data.matches);
+      if (Array.isArray(data.predictions)) setPredictions(data.predictions);
     }
-
-    const [matchesRes, predictionsRes] = await Promise.all([
-      fetch(`${supabaseUrl}/rest/v1/matches?select=*&order=match_date.asc`, { headers }),
-      fetch(`${supabaseUrl}/rest/v1/predictions?select=*&user_id=eq.${userId}`, { headers }),
-    ]);
-
-    const matchesData = await matchesRes.json();
-    if (Array.isArray(matchesData)) setMatches(matchesData);
-
-    const predictionsData = await predictionsRes.json();
-    if (Array.isArray(predictionsData)) setPredictions(predictionsData);
   };
 
   if (!user) return null;
@@ -165,7 +148,7 @@ export default function MatchesPage() {
   const nearestRound = (() => {
     if (matches.length === 0) return 1;
     const now = new Date();
-    const nearest = sortedRounds.find(([_, ms]) =>
+    const nearest = sortedRounds.find(([, ms]) =>
       ms.some(m => new Date(m.match_date) > now)
     );
     return nearest ? nearest[0] : roundKeys[roundKeys.length - 1] || 1;

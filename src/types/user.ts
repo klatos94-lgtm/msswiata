@@ -7,7 +7,6 @@ export interface UserProfile {
 
 export interface LeaderboardEntry {
   user_id: string;
-  email: string;
   nickname: string;
   total_points: number;
 }

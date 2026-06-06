@@ -10,12 +10,13 @@ export default function AdminPage() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [seeding, setSeeding] = useState(false);
-  const [seedMsg, setSeedMsg] = useState("");
 
   const [homeTeam, setHomeTeam] = useState("");
   const [awayTeam, setAwayTeam] = useState("");
   const [matchDate, setMatchDate] = useState("");
+  const [matchStage, setMatchStage] = useState(1);
+  const [finishingId, setFinishingId] = useState<string | null>(null);
+  const [recalculatingId, setRecalculatingId] = useState<string | null>(null);
 
   useEffect(() => {
     checkAdmin();
@@ -30,13 +31,23 @@ export default function AdminPage() {
       return;
     }
 
-    const { data: adminData } = await supabase
-      .from("admins")
-      .select("user_id")
-      .eq("user_id", userData.user.id)
-      .single();
+    const { data: { session } } = await supabase.auth.getSession();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json", "apikey": anonKey,
+    };
+    if (session?.access_token) {
+      headers["Authorization"] = `Bearer ${session.access_token}`;
+    }
 
-    if (adminData) {
+    const res = await fetch(
+      `${supabaseUrl}/rest/v1/admins?select=user_id&user_id=eq.${userData.user.id}`,
+      { headers }
+    );
+    const adminRows = await res.json();
+    console.log("admin check:", res.status, adminRows, "uid:", userData.user.id, "session:", !!session);
+    if (Array.isArray(adminRows) && adminRows.length > 0) {
       setIsAdmin(true);
     } else {
       router.push("/dashboard");
@@ -52,24 +63,6 @@ export default function AdminPage() {
     if (data) setMatches(data);
   };
 
-  const handleSeed = async () => {
-    setSeeding(true);
-    setSeedMsg("");
-    try {
-      const res = await fetch("/api/seed", { method: "POST" });
-      const data = await res.json();
-      if (data.success) {
-        setSeedMsg(`Wstawiono ${data.count} meczów!`);
-        loadMatches();
-      } else {
-        setSeedMsg("Błąd: " + (data.error || "nieznany"));
-      }
-    } catch {
-      setSeedMsg("Błąd sieci");
-    }
-    setSeeding(false);
-  };
-
   const handleAddMatch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!homeTeam || !awayTeam || !matchDate) return;
@@ -80,6 +73,7 @@ export default function AdminPage() {
         home_team: homeTeam,
         away_team: awayTeam,
         match_date: new Date(matchDate).toISOString(),
+        stage: matchStage,
       },
     ]);
 
@@ -87,6 +81,7 @@ export default function AdminPage() {
       setHomeTeam("");
       setAwayTeam("");
       setMatchDate("");
+      setMatchStage(1);
       setShowAddForm(false);
       loadMatches();
     }
@@ -97,18 +92,54 @@ export default function AdminPage() {
     homeScore: number,
     awayScore: number
   ) => {
+    setFinishingId(matchId);
     const supabase = getSupabaseClient();
-    await supabase
-      .from("matches")
-      .update({ home_score: homeScore, away_score: awayScore, finished: true })
-      .eq("id", matchId);
+    const { data: { session } } = await supabase.auth.getSession();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-    await supabase.rpc("calculate_match_points", {
-      match_id: matchId,
-      home_score: homeScore,
-      away_score: awayScore,
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json", "apikey": anonKey,
+    };
+    if (session?.access_token) {
+      headers["Authorization"] = `Bearer ${session.access_token}`;
+    }
+
+    await fetch(`${supabaseUrl}/rest/v1/rpc/calculate_match_points`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ p_match_id: matchId, p_home_score: homeScore, p_away_score: awayScore }),
     });
 
+    setFinishingId(null);
+    loadMatches();
+  };
+
+  const handleRecalculate = async (
+    matchId: string,
+    homeScore: number,
+    awayScore: number
+  ) => {
+    setRecalculatingId(matchId);
+    const supabase = getSupabaseClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json", "apikey": anonKey,
+    };
+    if (session?.access_token) {
+      headers["Authorization"] = `Bearer ${session.access_token}`;
+    }
+
+    await fetch(`${supabaseUrl}/rest/v1/rpc/recalculate_match_points`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ p_match_id: matchId, p_home_score: homeScore, p_away_score: awayScore }),
+    });
+
+    setRecalculatingId(null);
     loadMatches();
   };
 
@@ -135,16 +166,6 @@ export default function AdminPage() {
         >
           {showAddForm ? "Anuluj" : "+ Dodaj mecz"}
         </button>
-        <button
-          onClick={handleSeed}
-          disabled={seeding}
-          className="bg-[#001e28] hover:bg-[#002a38] active:scale-95 disabled:opacity-50 text-white px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 text-sm"
-        >
-          {seeding ? "..." : "⚡ Seed dane"}
-        </button>
-        {seedMsg && (
-          <span className="text-xs text-emerald-600 font-medium self-center">{seedMsg}</span>
-        )}
       </div>
 
       {showAddForm && (
@@ -175,6 +196,14 @@ export default function AdminPage() {
             required
             className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
           />
+          <select
+            value={matchStage}
+            onChange={(e) => setMatchStage(parseInt(e.target.value))}
+            className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
+          >
+            <option value={1}>Stage 1 — grupowy (×1)</option>
+            <option value={2}>Stage 2 — pucharowy (×2)</option>
+          </select>
           <button
             type="submit"
             className="bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white px-4 py-2 rounded-lg font-semibold shadow-sm transition-all duration-200 text-sm"
@@ -190,6 +219,9 @@ export default function AdminPage() {
             key={match.id}
             match={match}
             onFinish={handleScoreUpdate}
+            onRecalculate={handleRecalculate}
+            finishing={finishingId === match.id}
+            recalculating={recalculatingId === match.id}
           />
         ))}
       </div>
@@ -200,9 +232,15 @@ export default function AdminPage() {
 function MatchAdminCard({
   match,
   onFinish,
+  onRecalculate,
+  finishing,
+  recalculating,
 }: {
   match: Match;
   onFinish: (id: string, home: number, away: number) => void;
+  onRecalculate: (id: string, home: number, away: number) => void;
+  finishing: boolean;
+  recalculating: boolean;
 }) {
   const [homeScore, setHomeScore] = useState(
     match.home_score?.toString() ?? ""
@@ -210,6 +248,18 @@ function MatchAdminCard({
   const [awayScore, setAwayScore] = useState(
     match.away_score?.toString() ?? ""
   );
+
+  const scoreChanged =
+    parseInt(homeScore) !== (match.home_score ?? 0) ||
+    parseInt(awayScore) !== (match.away_score ?? 0);
+
+  const handleSave = () => {
+    if (match.finished) {
+      onRecalculate(match.id, parseInt(homeScore) || 0, parseInt(awayScore) || 0);
+    } else {
+      onFinish(match.id, parseInt(homeScore) || 0, parseInt(awayScore) || 0);
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
@@ -223,7 +273,6 @@ function MatchAdminCard({
             min="0"
             value={homeScore}
             onChange={(e) => setHomeScore(e.target.value)}
-            disabled={match.finished}
             className="w-12 bg-slate-50 text-slate-800 text-center rounded-lg px-1 py-1 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition text-sm"
           />
           <span className="text-slate-400 font-semibold">:</span>
@@ -232,7 +281,6 @@ function MatchAdminCard({
             min="0"
             value={awayScore}
             onChange={(e) => setAwayScore(e.target.value)}
-            disabled={match.finished}
             className="w-12 bg-slate-50 text-slate-800 text-center rounded-lg px-1 py-1 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition text-sm"
           />
         </div>
@@ -245,18 +293,25 @@ function MatchAdminCard({
         <span>
           {new Date(match.match_date).toLocaleDateString("pl-PL")}
         </span>
-        {!match.finished ? (
+        {match.finished ? (
+          <div className="flex items-center gap-2">
+            <span className="text-emerald-600 font-semibold text-xs bg-emerald-50 px-2 py-0.5 rounded-full">✓ Zakończony</span>
+            <button
+              onClick={handleSave}
+              disabled={!homeScore || !awayScore || !scoreChanged || recalculating}
+              className="bg-amber-500 hover:bg-amber-600 active:scale-95 disabled:bg-slate-200 text-white disabled:text-slate-400 px-3 py-1 rounded-lg font-semibold transition-all duration-200 text-xs shadow-sm"
+            >
+              {recalculating ? "..." : "Zapisz wynik"}
+            </button>
+          </div>
+        ) : (
           <button
-            onClick={() =>
-              onFinish(match.id, parseInt(homeScore) || 0, parseInt(awayScore) || 0)
-            }
-            disabled={!homeScore || !awayScore}
+            onClick={handleSave}
+            disabled={!homeScore || !awayScore || finishing}
             className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:bg-slate-200 text-white disabled:text-slate-400 px-3 py-1 rounded-lg font-semibold transition-all duration-200 text-xs shadow-sm"
           >
-            Zakończ mecz
+            {finishing ? "..." : "Zakończ mecz"}
           </button>
-        ) : (
-          <span className="text-emerald-600 font-semibold text-xs bg-emerald-50 px-2 py-0.5 rounded-full">✓ Zakończony</span>
         )}
       </div>
     </div>

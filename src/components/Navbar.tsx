@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { getSupabaseClient } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -53,29 +54,13 @@ export default function Navbar() {
           <div className="flex items-center gap-1 sm:gap-3 text-sm">
             {user ? (
               <>
-                <Link href="/dashboard" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
-                  Dashboard
-                </Link>
-                <Link href="/matches" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
-                  Mecze
-                </Link>
-                <Link href="/leaderboard" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
-                  Ranking
-                </Link>
-                <Link href="/tabela" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
-                  Tabela
-                </Link>
-                <Link href="/grupy" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
-                  Grupy
-                </Link>
-                <Link href="/regulamin" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
-                  Regulamin
-                </Link>
-                {isAdmin && (
-                  <Link href="/admin" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
-                    Admin
-                  </Link>
-                )}
+                <NavLink href="/dashboard" pathname={pathname}>Dashboard</NavLink>
+                <NavLink href="/matches" pathname={pathname}>Mecze</NavLink>
+                <NavLink href="/leaderboard" pathname={pathname}>Ranking</NavLink>
+                <NavLink href="/tabela" pathname={pathname}>Tabela</NavLink>
+                <NavLink href="/grupy" pathname={pathname}>Grupy</NavLink>
+                <NavLink href="/regulamin" pathname={pathname}>Regulamin</NavLink>
+                {isAdmin && <NavLink href="/admin" pathname={pathname}>Admin</NavLink>}
                 <button
                   onClick={handleLogout}
                   className="bg-red-50 hover:bg-red-100 active:scale-95 text-red-600 px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm"
@@ -95,5 +80,21 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
+  );
+}
+
+function NavLink({ href, pathname, children }: { href: string; pathname: string; children: React.ReactNode }) {
+  const active = pathname === href || (href !== "/" && pathname.startsWith(href));
+  return (
+    <Link
+      href={href}
+      className={`px-2.5 py-1.5 rounded-lg font-medium transition-all duration-200 ${
+        active
+          ? "text-emerald-700 bg-emerald-50 shadow-sm"
+          : "text-slate-600 hover:text-emerald-700 hover:bg-emerald-50"
+      }`}
+    >
+      {children}
+    </Link>
   );
 }

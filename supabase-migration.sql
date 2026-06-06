@@ -54,8 +54,7 @@ CREATE POLICY "users_select_own" ON public.users
   FOR SELECT USING (auth.uid() = id);
 
 DROP POLICY IF EXISTS "users_select_public" ON public.users;
-CREATE POLICY "users_select_public" ON public.users
-  FOR SELECT USING (true);
+-- removed: public select would expose emails; RPCs handle cross-user data via SECURITY DEFINER
 
 -- --- matches ---
 ALTER TABLE public.matches ENABLE ROW LEVEL SECURITY;
@@ -97,11 +96,18 @@ CREATE POLICY "predictions_select_finished" ON public.predictions
 
 DROP POLICY IF EXISTS "predictions_insert_own" ON public.predictions;
 CREATE POLICY "predictions_insert_own" ON public.predictions
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
+  FOR INSERT WITH CHECK (
+    auth.uid() = user_id AND
+    EXISTS (SELECT 1 FROM public.matches WHERE id = match_id AND match_date > NOW())
+  );
 
 DROP POLICY IF EXISTS "predictions_update_own" ON public.predictions;
 CREATE POLICY "predictions_update_own" ON public.predictions
-  FOR UPDATE USING (auth.uid() = user_id);
+  FOR UPDATE USING (auth.uid() = user_id)
+  WITH CHECK (
+    auth.uid() = user_id AND
+    EXISTS (SELECT 1 FROM public.matches WHERE id = match_id AND match_date > NOW())
+  );
 
 -- --- admins ---
 ALTER TABLE public.admins ENABLE ROW LEVEL SECURITY;
@@ -160,6 +166,9 @@ DECLARE
 BEGIN
   IF auth.role() <> 'authenticated' THEN
     RAISE EXCEPTION 'Not authenticated';
+  END IF;
+  IF p_user_id <> auth.uid() THEN
+    RAISE EXCEPTION 'Not authorized';
   END IF;
 
   SELECT u.nickname INTO v_nickname
@@ -303,6 +312,9 @@ BEGIN
   IF auth.role() <> 'authenticated' THEN
     RAISE EXCEPTION 'Not authenticated';
   END IF;
+  IF p_user_id <> auth.uid() THEN
+    RAISE EXCEPTION 'Not authorized';
+  END IF;
 
   SELECT JSON_AGG(row_to_json(m)) INTO v_matches
   FROM (
@@ -416,8 +428,14 @@ BEGIN
 
   SELECT JSON_AGG(row_to_json(p)) INTO v_predictions
   FROM (
-    SELECT user_id, match_id, predicted_home, predicted_away, points
-    FROM public.predictions
+    SELECT
+      p.user_id,
+      p.match_id,
+      CASE WHEN p.user_id = auth.uid() OR m.finished THEN p.predicted_home ELSE NULL END AS predicted_home,
+      CASE WHEN p.user_id = auth.uid() OR m.finished THEN p.predicted_away ELSE NULL END AS predicted_away,
+      CASE WHEN m.finished THEN p.points ELSE NULL END AS points
+    FROM public.predictions p
+    JOIN public.matches m ON m.id = p.match_id
   ) p;
 
   SELECT JSON_AGG(row_to_json(u)) INTO v_users
@@ -452,12 +470,22 @@ BEGIN
   SELECT u.nickname INTO v_nickname
   FROM public.users u WHERE u.id = p_user_id;
 
-  SELECT JSON_AGG(row_to_json(p)) INTO v_predictions
-  FROM (
-    SELECT p.match_id, p.predicted_home, p.predicted_away, p.points
-    FROM public.predictions p
-    WHERE p.user_id = p_user_id
-  ) p;
+  IF p_user_id = auth.uid() THEN
+    SELECT JSON_AGG(row_to_json(p)) INTO v_predictions
+    FROM (
+      SELECT p.match_id, p.predicted_home, p.predicted_away, p.points
+      FROM public.predictions p
+      WHERE p.user_id = p_user_id
+    ) p;
+  ELSE
+    SELECT JSON_AGG(row_to_json(p)) INTO v_predictions
+    FROM (
+      SELECT p.match_id, p.predicted_home, p.predicted_away, p.points
+      FROM public.predictions p
+      JOIN public.matches m ON m.id = p.match_id AND m.finished
+      WHERE p.user_id = p_user_id
+    ) p;
+  END IF;
 
   RETURN JSON_BUILD_OBJECT(
     'nickname', v_nickname,

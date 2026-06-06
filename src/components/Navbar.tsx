@@ -56,53 +56,55 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-between h-14">
-          <Link href="/" className="text-lg font-bold text-emerald-700 hover:text-emerald-800 transition-colors tracking-tight">
-            ⚽ <span className="hidden sm:inline">World Cup Betting</span><span className="sm:hidden">Typy</span>
-          </Link>
-
-          {user ? (
-            <>
-              <div className="hidden sm:flex items-center gap-1 sm:gap-3 text-sm">
-                {navLinks.map((link) => (
-                  <NavLink key={link.href} href={link.href} pathname={pathname}>{link.label}</NavLink>
-                ))}
-                <button
-                  onClick={handleLogout}
-                  className="bg-red-50 hover:bg-red-100 active:scale-95 text-red-600 px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm"
-                >
-                  Wyloguj
-                </button>
-              </div>
-
-              <button
-                onClick={() => setMobileOpen(true)}
-                className="sm:hidden p-2 text-slate-700 hover:text-emerald-700 transition-colors -mr-2"
-                aria-label="Menu"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-            </>
-          ) : (
-            <Link
-              href="/login"
-              className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-1.5 rounded-lg font-medium shadow-sm transition-all duration-200"
-            >
-              Zaloguj
+    <>
+      <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex items-center justify-between h-14">
+            <Link href="/" className="text-lg font-bold text-emerald-700 hover:text-emerald-800 transition-colors tracking-tight">
+              ⚽ <span className="hidden sm:inline">World Cup Betting</span><span className="sm:hidden">Typy</span>
             </Link>
-          )}
+
+            {user ? (
+              <>
+                <div className="hidden sm:flex items-center gap-1 sm:gap-3 text-sm">
+                  {navLinks.map((link) => (
+                    <NavLink key={link.href} href={link.href} pathname={pathname}>{link.label}</NavLink>
+                  ))}
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-50 hover:bg-red-100 active:scale-95 text-red-600 px-3 py-1.5 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm"
+                  >
+                    Wyloguj
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => setMobileOpen(true)}
+                  className="sm:hidden relative z-50 p-2 text-slate-700 hover:text-emerald-700 transition-colors -mr-2"
+                  aria-label="Menu"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-4 py-1.5 rounded-lg font-medium shadow-sm transition-all duration-200"
+              >
+                Zaloguj
+              </Link>
+            )}
+          </div>
         </div>
-      </div>
+      </nav>
 
       {mobileOpen && user && (
         <div className="fixed inset-0 z-50 sm:hidden">
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <div className="fixed right-0 top-0 h-full w-64 bg-white shadow-2xl">
-            <div className="flex items-center justify-between px-4 h-14 border-b border-slate-200">
+          <div className="fixed inset-0 bg-black/60" onClick={() => setMobileOpen(false)} />
+          <div className="fixed right-0 top-0 h-full w-72 bg-white shadow-2xl border-l border-slate-200">
+            <div className="flex items-center justify-between px-5 h-14 border-b border-slate-200">
               <span className="font-bold text-emerald-700">Menu</span>
               <button
                 onClick={() => setMobileOpen(false)}
@@ -114,7 +116,7 @@ export default function Navbar() {
                 </svg>
               </button>
             </div>
-            <div className="py-2">
+            <div className="py-2 bg-white">
               {navLinks.map((link) => {
                 const active = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
                 return (
@@ -122,7 +124,7 @@ export default function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`block px-4 py-3 text-sm font-medium transition-colors ${
+                    className={`block px-5 py-3.5 text-sm font-medium transition-colors ${
                       active
                         ? "text-emerald-700 bg-emerald-50 border-r-2 border-emerald-600"
                         : "text-slate-600 hover:text-emerald-700 hover:bg-emerald-50"
@@ -133,7 +135,7 @@ export default function Navbar() {
                 );
               })}
             </div>
-            <div className="absolute bottom-0 left-0 right-0 border-t border-slate-200 px-4 py-3 bg-white">
+            <div className="absolute bottom-0 left-0 right-0 border-t border-slate-200 px-5 py-4 bg-white">
               <button
                 onClick={handleLogout}
                 className="w-full bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2.5 rounded-lg font-medium transition-all duration-200 text-sm text-center"
@@ -144,7 +146,7 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </nav>
+    </>
   );
 }
 

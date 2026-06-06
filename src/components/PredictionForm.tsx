@@ -101,8 +101,8 @@ export default function PredictionForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center justify-end gap-1">
-      <div className="flex items-center gap-0.5">
+    <form onSubmit={handleSubmit} className="flex items-center justify-end gap-0.5 sm:gap-1">
+      <div className="flex items-center gap-px sm:gap-0.5">
         <input
           type="number"
           min="0"
@@ -110,10 +110,10 @@ export default function PredictionForm({
           value={home}
           disabled={started}
           onChange={(e) => setHome(e.target.value)}
-          className="w-8 bg-white text-slate-800 text-center rounded border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-[11px] disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+          className="w-7 sm:w-8 bg-white text-slate-800 text-center rounded border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-[10px] sm:text-[11px] disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
           placeholder="0"
         />
-        <span className="text-slate-400 text-[11px] font-semibold">:</span>
+        <span className="text-slate-400 text-[10px] sm:text-[11px] font-semibold">:</span>
         <input
           type="number"
           min="0"
@@ -121,7 +121,7 @@ export default function PredictionForm({
           value={away}
           disabled={started}
           onChange={(e) => setAway(e.target.value)}
-          className="w-8 bg-white text-slate-800 text-center rounded border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-[11px] disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+          className="w-7 sm:w-8 bg-white text-slate-800 text-center rounded border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-[10px] sm:text-[11px] disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
           placeholder="0"
         />
       </div>
@@ -129,12 +129,12 @@ export default function PredictionForm({
         <button
           type="submit"
           disabled={saving}
-          className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:bg-emerald-300 text-white px-2 py-1 rounded text-[11px] font-semibold transition-all duration-200"
+          className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:bg-emerald-300 text-white px-1.5 sm:px-2 py-1 rounded text-[10px] sm:text-[11px] font-semibold transition-all duration-200"
         >
           {saving ? "..." : "OK"}
         </button>
       )}
-      {message && <span className="text-[10px] text-emerald-600 font-medium animate-fade-in">{message}</span>}
+      {message && <span className="text-[9px] sm:text-[10px] text-emerald-600 font-medium animate-fade-in">{message}</span>}
     </form>
   );
 }

@@ -29,64 +29,64 @@ function MatchRow({
   const time = matchDate.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" });
 
   return (
-    <div className={`px-3 py-2.5 transition-colors border-b border-slate-100 last:border-b-0 hover:bg-slate-50/60 ${isFinished ? "" : ""}`}>
-      <div className="flex items-center gap-2">
-        <div className="w-14 flex-shrink-0 text-center">
-          <div className="text-[10px] font-bold text-slate-400 uppercase leading-tight">{day}</div>
-          <div className="text-[11px] font-bold text-slate-700 tabular-nums">{time}</div>
+    <div className={`px-2 sm:px-3 py-2 sm:py-2.5 transition-colors border-b border-slate-100 last:border-b-0 hover:bg-slate-50/60 ${isFinished ? "" : ""}`}>
+      <div className="flex items-center gap-1 sm:gap-2">
+        <div className="w-12 sm:w-14 flex-shrink-0 text-center">
+          <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-tight">{day}</div>
+          <div className="text-[10px] sm:text-[11px] font-bold text-slate-700 tabular-nums">{time}</div>
         </div>
 
-        <div className="flex-1 flex items-center gap-2 min-w-0">
-          <div className="flex-1 text-right">
-            <span className="text-[13px] font-semibold text-slate-700">{match.home_team}</span>
+        <div className="flex-1 flex items-center gap-1 sm:gap-2 min-w-0">
+          <div className="flex-1 text-right truncate">
+            <span className="text-[11px] sm:text-[13px] font-semibold text-slate-700">{match.home_team}</span>
           </div>
-          <div className="flex-shrink-0 flex items-center gap-1">
+          <div className="flex-shrink-0">
             <Flag team={match.home_team} className="flex-shrink-0" />
           </div>
         </div>
 
-        <div className="flex-shrink-0 w-16 text-center">
+        <div className="flex-shrink-0 w-14 sm:w-16 text-center">
           {isFinished && match.home_score !== null ? (
-            <span className="text-sm font-extrabold text-black tabular-nums">
+            <span className="text-xs sm:text-sm font-extrabold text-black tabular-nums">
               {match.home_score}:{match.away_score}
             </span>
           ) : isPast ? (
-            <span className="text-[11px] font-bold text-red-400">🔒</span>
+            <span className="text-[10px] sm:text-[11px] font-bold text-red-400">🔒</span>
           ) : (
-            <span className="text-[11px] font-bold text-emerald-600">VS</span>
+            <span className="text-[10px] sm:text-[11px] font-bold text-emerald-600">VS</span>
           )}
           {isFinished && pred && pred.points !== null && (
-            <div className="text-[10px] font-bold text-emerald-600 leading-tight">+{pred.points}</div>
+            <div className="text-[9px] sm:text-[10px] font-bold text-emerald-600 leading-tight">+{pred.points}</div>
           )}
         </div>
 
-        <div className="flex-1 flex items-center gap-2 min-w-0">
-          <div className="flex-shrink-0 flex items-center gap-1">
+        <div className="flex-1 flex items-center gap-1 sm:gap-2 min-w-0">
+          <div className="flex-shrink-0">
             <Flag team={match.away_team} className="flex-shrink-0" />
           </div>
-          <div className="flex-1 text-left">
-            <span className="text-[13px] font-semibold text-slate-700">{match.away_team}</span>
+          <div className="flex-1 text-left truncate">
+            <span className="text-[11px] sm:text-[13px] font-semibold text-slate-700">{match.away_team}</span>
           </div>
         </div>
 
-        <div className="flex-shrink-0 w-[72px] text-right">
+        <div className="flex-shrink-0 text-right min-w-[60px] sm:min-w-0">
           {isFinished ? (
             pred ? (
-              <span className={`text-[11px] font-semibold ${
+              <span className={`text-[10px] sm:text-[11px] font-semibold ${
                 pred.points && pred.points > 0 ? "text-emerald-600" : "text-slate-400"
               }`}>
                 {pred.predicted_home}:{pred.predicted_away}
               </span>
             ) : (
-              <span className="text-[11px] text-slate-300">—</span>
+              <span className="text-[10px] sm:text-[11px] text-slate-300">—</span>
             )
           ) : isPast ? (
             pred ? (
-              <span className="text-[11px] font-semibold text-red-400">
+              <span className="text-[10px] sm:text-[11px] font-semibold text-red-400">
                 {pred.predicted_home}:{pred.predicted_away}
               </span>
             ) : (
-              <span className="text-[11px] text-slate-300">—</span>
+              <span className="text-[10px] sm:text-[11px] text-slate-300">—</span>
             )
           ) : (
             <PredictionForm

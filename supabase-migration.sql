@@ -46,6 +46,21 @@ CREATE TABLE IF NOT EXISTS public.admins (
 -- 2. ROW LEVEL SECURITY (RLS)
 -- ============================================================
 
+-- --- usuń stare polityki (sprzed migracji) ---
+DROP POLICY IF EXISTS "users_select" ON public.users;
+DROP POLICY IF EXISTS "users_insert" ON public.users;
+DROP POLICY IF EXISTS "users_update" ON public.users;
+DROP POLICY IF EXISTS "users_delete" ON public.users;
+DROP POLICY IF EXISTS "matches_select" ON public.matches;
+DROP POLICY IF EXISTS "matches_insert" ON public.matches;
+DROP POLICY IF EXISTS "matches_update" ON public.matches;
+DROP POLICY IF EXISTS "matches_delete" ON public.matches;
+DROP POLICY IF EXISTS "predictions_select" ON public.predictions;
+DROP POLICY IF EXISTS "predictions_insert" ON public.predictions;
+DROP POLICY IF EXISTS "predictions_update" ON public.predictions;
+DROP POLICY IF EXISTS "predictions_delete" ON public.predictions;
+DROP POLICY IF EXISTS "admins_select" ON public.admins;
+
 -- --- users ---
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 

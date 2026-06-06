@@ -93,7 +93,7 @@ export default function TabelaPage() {
                   {users.map((u) => (
                     <th
                       key={u.id}
-                      className={`px-1.5 py-1 text-center font-medium min-w-[56px] max-w-[72px] border-r border-slate-100 last:border-r-0 ${
+                      className={`px-1.5 py-1 text-center font-medium w-[72px] border-r border-slate-100 last:border-r-0 ${
                         u.id === user.id
                           ? "bg-emerald-50 text-emerald-700"
                           : "text-slate-500"

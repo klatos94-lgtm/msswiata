@@ -90,5 +90,6 @@ SELECT '=== PODSUMOWANIE ===' AS info;
 SELECT 'Tabele: 4 (profiles, matches, predictions, admins)' AS status;
 SELECT 'RLS: powinno być włączone na wszystkich tabelach' AS status;
 SELECT 'Polityki RLS: profiles_select_own, profiles_insert_own, profiles_update_own, matches_select_all, predictions_select_own, predictions_insert_own, predictions_update_own, predictions_select_finished, admins_select_all' AS status;
-SELECT 'RPC publiczne: get_leaderboard, get_dashboard, get_matches_with_predictions, get_group_table, get_cartesian_table, get_user_detail' AS status;
-SELECT 'RPC admin: calculate_match_points (SECURITY DEFINER + auth check), recalculate_match_points (SECURITY DEFINER + auth check)' AS status;
+SELECT 'RPC publiczne (z auth check): get_leaderboard, get_dashboard, get_matches_with_predictions, get_group_table, get_cartesian_table, get_user_detail' AS status;
+SELECT 'RPC admin (z auth check admina): calculate_match_points, recalculate_match_points' AS status;
+SELECT 'Wszystkie RPC wymagają auth.role() = authenticated' AS status;

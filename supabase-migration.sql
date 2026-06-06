@@ -121,10 +121,16 @@ RETURNS TABLE (
   nickname TEXT,
   total_points BIGINT
 )
-LANGUAGE sql
+LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
 AS $$
+BEGIN
+  IF auth.role() <> 'authenticated' THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
+  RETURN QUERY
   SELECT
     u.id AS user_id,
     u.nickname,
@@ -133,6 +139,7 @@ AS $$
   LEFT JOIN public.predictions p ON p.user_id = u.id
   GROUP BY u.id, u.nickname
   ORDER BY total_points DESC;
+END;
 $$;
 
 -- --- get_dashboard: dane dla dashboardu w jednym zapytaniu ---
@@ -151,6 +158,10 @@ DECLARE
   v_today_matches JSON;
   v_user_predictions JSON;
 BEGIN
+  IF auth.role() <> 'authenticated' THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
   SELECT u.nickname INTO v_nickname
   FROM public.users u WHERE u.id = p_user_id;
 
@@ -289,6 +300,10 @@ DECLARE
   v_matches JSON;
   v_predictions JSON;
 BEGIN
+  IF auth.role() <> 'authenticated' THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
   SELECT JSON_AGG(row_to_json(m)) INTO v_matches
   FROM (
     SELECT * FROM public.matches ORDER BY match_date
@@ -317,6 +332,10 @@ AS $$
 DECLARE
   v_result JSON;
 BEGIN
+  IF auth.role() <> 'authenticated' THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
   WITH group_teams (team, group_label) AS (
     VALUES
       ('Meksyk', 'A'), ('Republika Południowej Afryki', 'A'), ('Korea Południowa', 'A'), ('Czechy', 'A'),
@@ -385,6 +404,10 @@ DECLARE
   v_predictions JSON;
   v_users JSON;
 BEGIN
+  IF auth.role() <> 'authenticated' THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
   SELECT JSON_AGG(row_to_json(m)) INTO v_matches
   FROM (
     SELECT id, home_team, away_team, match_date, round, stage, home_score, away_score, finished
@@ -422,6 +445,10 @@ DECLARE
   v_nickname TEXT;
   v_predictions JSON;
 BEGIN
+  IF auth.role() <> 'authenticated' THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+
   SELECT u.nickname INTO v_nickname
   FROM public.users u WHERE u.id = p_user_id;
 

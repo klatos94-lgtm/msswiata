@@ -60,8 +60,9 @@ export default function Navbar() {
       <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between h-14">
-            <Link href="/" className="text-lg font-bold text-emerald-700 hover:text-emerald-800 transition-colors tracking-tight">
-              ⚽ <span className="hidden sm:inline">World Cup Betting</span><span className="sm:hidden">Typy</span>
+            <Link href="/" className="flex items-center gap-2 text-lg font-bold text-emerald-700 hover:text-emerald-800 transition-colors tracking-tight">
+              <img src="/fifa-logo.png" alt="FIFA" className="h-7 w-auto" />
+              <span className="hidden sm:inline">Latoss Betting</span><span className="sm:hidden">Latoss</span>
             </Link>
 
             {user ? (

@@ -16,7 +16,7 @@ const barlowCondensed = Barlow_Condensed({
 });
 
 export const metadata: Metadata = {
-  title: "World Cup Betting",
+  title: "Latoss Betting",
   description: "Obstawiaj wyniki Mistrzostw Świata",
 };
 

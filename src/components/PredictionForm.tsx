@@ -70,7 +70,7 @@ export default function PredictionForm({
           }
         );
         if (!res.ok) {
-          setMessage("Błąd zapisu: " + res.status);
+          setMessage("Błąd zapisu — spróbuj ponownie");
         } else {
           setMessage("Zaktualizowano!");
           onSave?.();
@@ -87,14 +87,14 @@ export default function PredictionForm({
           }),
         });
         if (!res.ok) {
-          setMessage("Błąd zapisu: " + res.status);
+          setMessage("Błąd zapisu — spróbuj ponownie");
         } else {
           setMessage("Zapisano!");
           onSave?.();
         }
       }
-    } catch (err: unknown) {
-      setMessage("Błąd: " + (err instanceof Error ? err.message : String(err)));
+    } catch {
+      setMessage("Wystąpił nieoczekiwany błąd");
     }
 
     setSaving(false);

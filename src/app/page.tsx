@@ -8,7 +8,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(251,191,36,0.08),transparent_50%)]" />
       <div className="relative z-10 max-w-2xl px-4 animate-[fadeIn_0.6s_ease-out]">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-3 text-white drop-shadow-lg tracking-tight">
-          World Cup{' '}
+          Latoss{' '}
           <span className="text-amber-300">Betting</span>
         </h1>
         <p className="text-emerald-100/90 text-base sm:text-lg mb-8 max-w-lg mx-auto">

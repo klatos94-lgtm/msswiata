@@ -23,7 +23,7 @@ export default function Home() {
             Zaloguj się
           </Link>
           <Link
-            href="/leaderboard"
+            href="/login"
             className="bg-white/15 hover:bg-white/25 backdrop-blur-sm active:scale-[0.97] text-white px-7 py-3 rounded-xl font-semibold border border-white/30 shadow-lg transition-all duration-200"
           >
             Ranking

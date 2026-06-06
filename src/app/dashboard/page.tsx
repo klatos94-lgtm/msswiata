@@ -7,33 +7,7 @@ import type { User } from "@supabase/supabase-js";
 import type { Match } from "@/types/match";
 import type { Prediction } from "@/types/prediction";
 import PredictionForm from "@/components/PredictionForm";
-
-const flags: Record<string, string> = {
-  "Polska": "🇵🇱", "Argentyna": "🇦🇷", "Niemcy": "🇩🇪", "Brazylia": "🇧🇷",
-  "Francja": "🇫🇷", "Anglia": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Hiszpania": "🇪🇸", "Holandia": "🇳🇱",
-  "Portugalia": "🇵🇹", "Belgia": "🇧🇪", "Chorwacja": "🇭🇷",
-  "Meksyk": "🇲🇽", "Republika Południowej Afryki": "🇿🇦",
-  "Korea Południowa": "🇰🇷", "Czechy": "🇨🇿",
-  "Kanada": "🇨🇦", "Bośnia i Hercegowina": "🇧🇦",
-  "USA": "🇺🇸", "Paragwaj": "🇵🇾",
-  "Haiti": "🇭🇹", "Szkocja": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-  "Australia": "🇦🇺", "Turcja": "🇹🇷",
-  "Maroko": "🇲🇦", "Katar": "🇶🇦", "Szwajcaria": "🇨🇭",
-  "Wybrzeże Kości Słoniowej": "🇨🇮", "Ekwador": "🇪🇨",
-  "Curaçao": "🇨🇼", "Curacao": "🇨🇼", "Japonia": "🇯🇵",
-  "Szwecja": "🇸🇪", "Tunezja": "🇹🇳",
-  "Egipt": "🇪🇬", "Iran": "🇮🇷", "Nowa Zelandia": "🇳🇿",
-  "Arabia Saudyjska": "🇸🇦", "Urugwaj": "🇺🇾",
-  "Senegal": "🇸🇳", "Irak": "🇮🇶", "Norwegia": "🇳🇴",
-  "Algieria": "🇩🇿", "Austria": "🇦🇹", "Jordania": "🇯🇴",
-  "DR Konga": "🇨🇩", "Ghana": "🇬🇭", "Panama": "🇵🇦",
-  "Uzbekistan": "🇺🇿", "Kolumbia": "🇨🇴",
-  "Republika Zielonego Przylądka": "🇨🇻",
-};
-
-function getFlag(team: string): string {
-  return flags[team] || "🏳️";
-}
+import Flag from "@/components/Flag";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -183,7 +157,7 @@ export default function DashboardPage() {
                       <span className="text-[13px] font-semibold text-slate-700 truncate text-right max-w-[110px]">
                         {match.home_team}
                       </span>
-                      <span className="text-sm flex-shrink-0">{getFlag(match.home_team)}</span>
+                      <Flag team={match.home_team} className="flex-shrink-0" />
                     </div>
 
                     <div className="flex-shrink-0 min-w-[50px] text-center">
@@ -199,7 +173,7 @@ export default function DashboardPage() {
                     </div>
 
                     <div className="flex-1 flex items-center gap-1.5 min-w-0">
-                      <span className="text-sm flex-shrink-0">{getFlag(match.away_team)}</span>
+                      <Flag team={match.away_team} className="flex-shrink-0" />
                       <span className="text-[13px] font-semibold text-slate-700 truncate max-w-[110px]">
                         {match.away_team}
                       </span>

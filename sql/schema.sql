@@ -15,6 +15,7 @@ CREATE TABLE matches (
   away_team TEXT NOT NULL,
   match_date TIMESTAMPTZ NOT NULL,
   round INTEGER DEFAULT 1,
+  stage INTEGER DEFAULT 1,
   home_score INTEGER,
   away_score INTEGER,
   finished BOOLEAN DEFAULT FALSE,
@@ -58,6 +59,41 @@ CREATE OR REPLACE TRIGGER on_auth_user_created
   FOR EACH ROW
   EXECUTE FUNCTION public.handle_new_user();
 
+-- RPC: przelicz punkty po zakończeniu meczu
+CREATE OR REPLACE FUNCTION calculate_match_points(
+  p_match_id UUID,
+  p_home_score INT,
+  p_away_score INT
+) RETURNS void AS $$
+DECLARE
+  mult INT;
+  rec RECORD;
+BEGIN
+  SELECT COALESCE(stage, 1) INTO mult FROM matches WHERE id = p_match_id;
+
+  UPDATE matches
+  SET home_score = p_home_score,
+      away_score = p_away_score,
+      finished = TRUE
+  WHERE id = p_match_id;
+
+  FOR rec IN
+    SELECT p.id,
+      CASE
+        WHEN p.predicted_home = p_home_score AND p.predicted_away = p_away_score THEN 3 * mult
+        WHEN (p.predicted_home - p.predicted_away > 0 AND p_home_score - p_away_score > 0) OR
+             (p.predicted_home - p.predicted_away < 0 AND p_home_score - p_away_score < 0) OR
+             (p.predicted_home = p.predicted_away AND p_home_score = p_away_score) THEN 1 * mult
+        ELSE 0
+      END AS pts
+    FROM predictions p
+    WHERE p.match_id = p_match_id
+  LOOP
+    UPDATE predictions SET points = rec.pts WHERE id = rec.id;
+  END LOOP;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 -- Polityki RLS (Row Level Security)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE matches ENABLE ROW LEVEL SECURITY;
@@ -75,10 +111,18 @@ CREATE POLICY "matches_insert" ON matches FOR INSERT WITH CHECK (auth.uid() IS N
 CREATE POLICY "matches_update" ON matches FOR UPDATE USING (auth.uid() IS NOT NULL);
 CREATE POLICY "matches_delete" ON matches FOR DELETE USING (auth.uid() IS NOT NULL);
 
--- Predictions: każdy widzi swoje, może dodawać/edytować swoje
+-- Predictions: tylko zalogowani widzą / dodają / edytują
 CREATE POLICY "predictions_select" ON predictions FOR SELECT USING (auth.uid() IS NOT NULL);
-CREATE POLICY "predictions_insert" ON predictions FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "predictions_update" ON predictions FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "predictions_insert" ON predictions
+  FOR INSERT WITH CHECK (
+    auth.uid() = user_id AND
+    EXISTS (SELECT 1 FROM matches WHERE id = match_id AND match_date > NOW())
+  );
+CREATE POLICY "predictions_update" ON predictions
+  FOR UPDATE USING (
+    auth.uid() = user_id AND
+    EXISTS (SELECT 1 FROM matches WHERE id = match_id AND match_date > NOW())
+  );
 
--- Admins: każdy może sprawdzić kto jest adminem, dodawać może tylko service_role
+-- Admins: każdy może sprawdzić kto jest adminem
 CREATE POLICY "admins_select" ON admins FOR SELECT USING (TRUE);

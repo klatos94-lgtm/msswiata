@@ -32,7 +32,7 @@ export default function Navbar() {
       .from("admins")
       .select("user_id")
       .eq("user_id", userId)
-      .single();
+      .maybeSingle();
     setIsAdmin(!!data);
   };
 
@@ -64,6 +64,9 @@ export default function Navbar() {
                 </Link>
                 <Link href="/tabela" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
                   Tabela
+                </Link>
+                <Link href="/grupy" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
+                  Grupy
                 </Link>
                 <Link href="/regulamin" className="px-2.5 py-1.5 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg font-medium transition-all duration-200">
                   Regulamin

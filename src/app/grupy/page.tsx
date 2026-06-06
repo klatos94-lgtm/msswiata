@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { getSupabaseClient } from "@/lib/supabase";
 import type { Match } from "@/types/match";
 import { GROUPS } from "@/lib/groups";
-import { getFlag } from "@/lib/flags";
+import Flag from "@/components/Flag";
 
 interface TeamStats {
   team: string;
@@ -180,7 +180,7 @@ export default function GrupyPage() {
                             </td>
                             <td className="px-2 py-1.5">
                               <span className="flex items-center gap-1">
-                                <span>{getFlag(entry.team)}</span>
+                                <Flag team={entry.team} />
                                 <span className="font-semibold text-slate-700 truncate max-w-[100px]">
                                   {entry.team.split(" ").pop()}
                                 </span>

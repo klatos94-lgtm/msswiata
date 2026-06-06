@@ -1,40 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getSupabaseClient } from "@/lib/supabase";
 import LeaderboardTable from "@/components/LeaderboardTable";
 import type { LeaderboardEntry } from "@/types/user";
 import type { Match } from "@/types/match";
 import type { Prediction } from "@/types/prediction";
-
-const flags: Record<string, string> = {
-  "Polska": "🇵🇱", "Argentyna": "🇦🇷", "Niemcy": "🇩🇪", "Brazylia": "🇧🇷",
-  "Francja": "🇫🇷", "Anglia": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Hiszpania": "🇪🇸", "Holandia": "🇳🇱",
-  "Portugalia": "🇵🇹", "Belgia": "🇧🇪", "Chorwacja": "🇭🇷",
-  "Meksyk": "🇲🇽", "Republika Południowej Afryki": "🇿🇦",
-  "Korea Południowa": "🇰🇷", "Czechy": "🇨🇿",
-  "Kanada": "🇨🇦", "Bośnia i Hercegowina": "🇧🇦",
-  "USA": "🇺🇸", "Paragwaj": "🇵🇾",
-  "Haiti": "🇭🇹", "Szkocja": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-  "Australia": "🇦🇺", "Turcja": "🇹🇷",
-  "Maroko": "🇲🇦", "Katar": "🇶🇦", "Szwajcaria": "🇨🇭",
-  "Wybrzeże Kości Słoniowej": "🇨🇮", "Ekwador": "🇪🇨",
-  "Curaçao": "🇨🇼", "Curacao": "🇨🇼", "Japonia": "🇯🇵",
-  "Szwecja": "🇸🇪", "Tunezja": "🇹🇳",
-  "Egipt": "🇪🇬", "Iran": "🇮🇷", "Nowa Zelandia": "🇳🇿",
-  "Arabia Saudyjska": "🇸🇦", "Urugwaj": "🇺🇾",
-  "Senegal": "🇸🇳", "Irak": "🇮🇶", "Norwegia": "🇳🇴",
-  "Algieria": "🇩🇿", "Austria": "🇦🇹", "Jordania": "🇯🇴",
-  "DR Konga": "🇨🇩", "Ghana": "🇬🇭", "Panama": "🇵🇦",
-  "Uzbekistan": "🇺🇿", "Kolumbia": "🇨🇴",
-  "Republika Zielonego Przylądka": "🇨🇻",
-};
-
-function getFlag(team: string): string {
-  return flags[team] || "🏳️";
-}
+import Flag from "@/components/Flag";
 
 export default function LeaderboardPage() {
+  const router = useRouter();
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -43,8 +19,15 @@ export default function LeaderboardPage() {
   const [userPredictions, setUserPredictions] = useState<Prediction[]>([]);
 
   useEffect(() => {
-    loadLeaderboard();
-    loadMatches();
+    const supabase = getSupabaseClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) {
+        router.push("/login");
+        return;
+      }
+      loadLeaderboard();
+      loadMatches();
+    });
   }, []);
 
   const loadLeaderboard = async () => {
@@ -183,7 +166,7 @@ export default function LeaderboardPage() {
                     </div>
                     <div className="flex-1 flex items-center justify-end gap-1 min-w-0">
                       <span className="text-[13px] font-semibold text-slate-700 truncate text-right max-w-[90px]">{match.home_team}</span>
-                      <span className="text-sm flex-shrink-0">{getFlag(match.home_team)}</span>
+                      <Flag team={match.home_team} className="flex-shrink-0" />
                     </div>
                     <div className="flex-shrink-0 text-center min-w-[40px]">
                       <span className="text-sm font-extrabold text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded-md tabular-nums">
@@ -191,7 +174,7 @@ export default function LeaderboardPage() {
                       </span>
                     </div>
                     <div className="flex-1 flex items-center gap-1 min-w-0">
-                      <span className="text-sm flex-shrink-0">{getFlag(match.away_team)}</span>
+                      <Flag team={match.away_team} className="flex-shrink-0" />
                       <span className="text-[13px] font-semibold text-slate-700 truncate max-w-[90px]">{match.away_team}</span>
                     </div>
                     <div className="w-16 flex-shrink-0 text-right">

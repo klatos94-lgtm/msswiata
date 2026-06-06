@@ -7,33 +7,7 @@ import type { User } from "@supabase/supabase-js";
 import type { Match } from "@/types/match";
 import type { Prediction } from "@/types/prediction";
 import PredictionForm from "@/components/PredictionForm";
-
-const flags: Record<string, string> = {
-  "Polska": "🇵🇱", "Argentyna": "🇦🇷", "Niemcy": "🇩🇪", "Brazylia": "🇧🇷",
-  "Francja": "🇫🇷", "Anglia": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Hiszpania": "🇪🇸", "Holandia": "🇳🇱",
-  "Portugalia": "🇵🇹", "Belgia": "🇧🇪", "Chorwacja": "🇭🇷",
-  "Meksyk": "🇲🇽", "Republika Południowej Afryki": "🇿🇦",
-  "Korea Południowa": "🇰🇷", "Czechy": "🇨🇿",
-  "Kanada": "🇨🇦", "Bośnia i Hercegowina": "🇧🇦",
-  "USA": "🇺🇸", "Paragwaj": "🇵🇾",
-  "Haiti": "🇭🇹", "Szkocja": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-  "Australia": "🇦🇺", "Turcja": "🇹🇷",
-  "Maroko": "🇲🇦", "Katar": "🇶🇦", "Szwajcaria": "🇨🇭",
-  "Wybrzeże Kości Słoniowej": "🇨🇮", "Ekwador": "🇪🇨",
-  "Curaçao": "🇨🇼", "Curacao": "🇨🇼", "Japonia": "🇯🇵",
-  "Szwecja": "🇸🇪", "Tunezja": "🇹🇳",
-  "Egipt": "🇪🇬", "Iran": "🇮🇷", "Nowa Zelandia": "🇳🇿",
-  "Arabia Saudyjska": "🇸🇦", "Urugwaj": "🇺🇾",
-  "Senegal": "🇸🇳", "Irak": "🇮🇶", "Norwegia": "🇳🇴",
-  "Algieria": "🇩🇿", "Austria": "🇦🇹", "Jordania": "🇯🇴",
-  "DR Konga": "🇨🇩", "Ghana": "🇬🇭", "Panama": "🇵🇦",
-  "Uzbekistan": "🇺🇿", "Kolumbia": "🇨🇴",
-  "Republika Zielonego Przylądka": "🇨🇻",
-};
-
-function getFlag(team: string): string {
-  return flags[team] || "🏳️";
-}
+import Flag from "@/components/Flag";
 
 function MatchRow({
   match,
@@ -55,48 +29,66 @@ function MatchRow({
   const time = matchDate.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" });
 
   return (
-    <div className={`flex items-start px-3 py-2.5 gap-2 transition-colors ${
-      pred ? "bg-emerald-50/40" : ""
-    } ${
-      isFinished ? "border-2 border-black rounded-lg" : isPast ? "border-2 border-red-400 rounded-lg" : "border-b border-slate-100"
-    } ${isPast ? "mb-1" : ""} hover:bg-slate-50/60`}>
-      <div className="w-14 flex-shrink-0 text-center pt-0.5">
-        <div className="text-[10px] font-bold text-slate-400 uppercase leading-tight">{day}</div>
-        <div className="text-[11px] font-bold text-slate-700 tabular-nums">{time}</div>
-      </div>
+    <div className={`px-3 py-2.5 transition-colors border-b border-slate-100 last:border-b-0 hover:bg-slate-50/60 ${isFinished ? "" : ""}`}>
+      <div className="flex items-center gap-2">
+        <div className="w-14 flex-shrink-0 text-center">
+          <div className="text-[10px] font-bold text-slate-400 uppercase leading-tight">{day}</div>
+          <div className="text-[11px] font-bold text-slate-700 tabular-nums">{time}</div>
+        </div>
 
-      <div className="flex-1 flex items-center justify-end gap-1.5 min-w-0 pt-0.5">
-        <span className="text-[13px] font-semibold text-slate-700 truncate text-right max-w-[110px]">
-          {match.home_team}
-        </span>
-        <span className="text-sm flex-shrink-0">{getFlag(match.home_team)}</span>
-      </div>
+        <div className="flex-1 flex items-center gap-2 min-w-0">
+          <div className="flex-1 text-right">
+            <span className="text-[13px] font-semibold text-slate-700">{match.home_team}</span>
+          </div>
+          <div className="flex-shrink-0 flex items-center gap-1">
+            <Flag team={match.home_team} className="flex-shrink-0" />
+          </div>
+        </div>
 
-      <div className="flex-shrink-0 min-w-[76px] flex flex-col items-center gap-0.5">
-        {isFinished && match.home_score !== null ? (
-          <span className="text-sm font-extrabold text-slate-800 tabular-nums bg-slate-100 px-2 py-0.5 rounded-md">
-            {match.home_score}:{match.away_score}
-          </span>
-        ) : isPast ? (
-          <span className="text-[10px] font-bold text-red-500">🔒</span>
-        ) : (
-          <span className="text-[10px] font-bold text-emerald-600">VS</span>
-        )}
+        <div className="flex-shrink-0 w-16 text-center">
+          {isFinished && match.home_score !== null ? (
+            <span className="text-sm font-extrabold text-black tabular-nums">
+              {match.home_score}:{match.away_score}
+            </span>
+          ) : isPast ? (
+            <span className="text-[11px] font-bold text-red-400">🔒</span>
+          ) : (
+            <span className="text-[11px] font-bold text-emerald-600">VS</span>
+          )}
+          {isFinished && pred && pred.points !== null && (
+            <div className="text-[10px] font-bold text-emerald-600 leading-tight">+{pred.points}</div>
+          )}
+        </div>
 
-        {pred && (
-          <span className="text-[10px] font-semibold text-slate-600">
-            Twój typ: {pred.predicted_home}:{pred.predicted_away}
-          </span>
-        )}
+        <div className="flex-1 flex items-center gap-2 min-w-0">
+          <div className="flex-shrink-0 flex items-center gap-1">
+            <Flag team={match.away_team} className="flex-shrink-0" />
+          </div>
+          <div className="flex-1 text-left">
+            <span className="text-[13px] font-semibold text-slate-700">{match.away_team}</span>
+          </div>
+        </div>
 
-        {isFinished && isPast && pred && "points" in pred && (
-          <span className="text-[10px] font-bold text-emerald-600">
-            +{(pred as unknown as { points: number }).points ?? "—"}pkt
-          </span>
-        )}
-
-        {!isFinished && !isPast && (
-          <div className="mt-0.5">
+        <div className="flex-shrink-0 w-[72px] text-right">
+          {isFinished ? (
+            pred ? (
+              <span className={`text-[11px] font-semibold ${
+                pred.points && pred.points > 0 ? "text-emerald-600" : "text-slate-400"
+              }`}>
+                {pred.predicted_home}:{pred.predicted_away}
+              </span>
+            ) : (
+              <span className="text-[11px] text-slate-300">—</span>
+            )
+          ) : isPast ? (
+            pred ? (
+              <span className="text-[11px] font-semibold text-red-400">
+                {pred.predicted_home}:{pred.predicted_away}
+              </span>
+            ) : (
+              <span className="text-[11px] text-slate-300">—</span>
+            )
+          ) : (
             <PredictionForm
               matchId={match.id}
               userId={userId}
@@ -104,15 +96,8 @@ function MatchRow({
               existingPrediction={pred}
               onSave={onSave}
             />
-          </div>
-        )}
-      </div>
-
-      <div className="flex-1 flex items-center gap-1.5 min-w-0 pt-0.5">
-        <span className="text-sm flex-shrink-0">{getFlag(match.away_team)}</span>
-        <span className="text-[13px] font-semibold text-slate-700 truncate max-w-[110px]">
-          {match.away_team}
-        </span>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -127,13 +112,13 @@ export default function MatchesPage() {
 
   useEffect(() => {
     const supabase = getSupabaseClient();
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
         router.push("/login");
         return;
       }
-      setUser(data.user);
-      loadData(data.user.id);
+      setUser(session.user);
+      loadData(session.user.id);
     });
   }, []);
 
@@ -141,18 +126,28 @@ export default function MatchesPage() {
 
   const loadData = async (userId: string) => {
     const supabase = getSupabaseClient();
+    const { data: { session } } = await supabase.auth.getSession();
 
-    const { data: matchesData } = await supabase
-      .from("matches")
-      .select("*")
-      .order("match_date", { ascending: true });
-    if (matchesData) setMatches(matchesData);
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      "apikey": anonKey,
+    };
+    if (session?.access_token) {
+      headers["Authorization"] = `Bearer ${session.access_token}`;
+    }
 
-    const { data: predictionsData } = await supabase
-      .from("predictions")
-      .select("*")
-      .eq("user_id", userId);
-    if (predictionsData) setPredictions(predictionsData);
+    const [matchesRes, predictionsRes] = await Promise.all([
+      fetch(`${supabaseUrl}/rest/v1/matches?select=*&order=match_date.asc`, { headers }),
+      fetch(`${supabaseUrl}/rest/v1/predictions?select=*&user_id=eq.${userId}`, { headers }),
+    ]);
+
+    const matchesData = await matchesRes.json();
+    if (Array.isArray(matchesData)) setMatches(matchesData);
+
+    const predictionsData = await predictionsRes.json();
+    if (Array.isArray(predictionsData)) setPredictions(predictionsData);
   };
 
   if (!user) return null;

@@ -4,6 +4,7 @@ export interface Match {
   away_team: string;
   match_date: string;
   round: number;
+  stage: number;
   home_score: number | null;
   away_score: number | null;
   finished: boolean;

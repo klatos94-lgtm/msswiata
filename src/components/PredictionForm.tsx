@@ -36,7 +36,6 @@ export default function PredictionForm({
 
     setSaving(true);
     setMessage("");
-    const supabase = getSupabaseClient();
 
     const homeScore = parseInt(home, 10);
     const awayScore = parseInt(away, 10);
@@ -47,43 +46,63 @@ export default function PredictionForm({
       return;
     }
 
-    if (existingPrediction) {
-      const { error } = await supabase
-        .from("predictions")
-        .update({ predicted_home: homeScore, predicted_away: awayScore })
-        .eq("match_id", matchId)
-        .eq("user_id", userId);
+    const supabase = getSupabaseClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-      if (error) {
-        setMessage("Błąd zapisu: " + error.message);
-      } else {
-        setMessage("Zaktualizowano!");
-        onSave?.();
-      }
-    } else {
-      const { error } = await supabase.from("predictions").insert([
-        {
-          match_id: matchId,
-          user_id: userId,
-          predicted_home: homeScore,
-          predicted_away: awayScore,
-        },
-      ]);
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      "apikey": anonKey,
+    };
+    if (session?.access_token) {
+      headers["Authorization"] = `Bearer ${session.access_token}`;
+    }
 
-      if (error) {
-        setMessage("Błąd zapisu: " + error.message);
+    try {
+      if (existingPrediction) {
+        const res = await fetch(
+          `${supabaseUrl}/rest/v1/predictions?match_id=eq.${matchId}&user_id=eq.${userId}`,
+          {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify({ predicted_home: homeScore, predicted_away: awayScore }),
+          }
+        );
+        if (!res.ok) {
+          setMessage("Błąd zapisu: " + res.status);
+        } else {
+          setMessage("Zaktualizowano!");
+          onSave?.();
+        }
       } else {
-        setMessage("Zapisano!");
-        onSave?.();
+        const res = await fetch(`${supabaseUrl}/rest/v1/predictions`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            match_id: matchId,
+            user_id: userId,
+            predicted_home: homeScore,
+            predicted_away: awayScore,
+          }),
+        });
+        if (!res.ok) {
+          setMessage("Błąd zapisu: " + res.status);
+        } else {
+          setMessage("Zapisano!");
+          onSave?.();
+        }
       }
+    } catch (err: any) {
+      setMessage("Błąd: " + err.message);
     }
 
     setSaving(false);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-1 mt-1">
-      <div className="flex items-center gap-1">
+    <form onSubmit={handleSubmit} className="flex items-center justify-end gap-1">
+      <div className="flex items-center gap-0.5">
         <input
           type="number"
           min="0"
@@ -91,7 +110,7 @@ export default function PredictionForm({
           value={home}
           disabled={started}
           onChange={(e) => setHome(e.target.value)}
-          className="w-10 bg-white text-slate-800 text-center rounded-md px-0.5 py-1 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-[11px] disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+          className="w-8 bg-white text-slate-800 text-center rounded border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-[11px] disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
           placeholder="0"
         />
         <span className="text-slate-400 text-[11px] font-semibold">:</span>
@@ -102,24 +121,20 @@ export default function PredictionForm({
           value={away}
           disabled={started}
           onChange={(e) => setAway(e.target.value)}
-          className="w-10 bg-white text-slate-800 text-center rounded-md px-0.5 py-1 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-[11px] disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+          className="w-8 bg-white text-slate-800 text-center rounded border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-[11px] disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
           placeholder="0"
         />
       </div>
-
-      {started ? (
-        <span className="text-[10px] text-red-500 font-medium">Mecz już się rozpoczął</span>
-      ) : (
+      {!started && (
         <button
           type="submit"
           disabled={saving}
-          className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:bg-emerald-300 text-white px-4 py-1 rounded-md text-[11px] font-semibold shadow-sm transition-all duration-200"
+          className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:bg-emerald-300 text-white px-2 py-1 rounded text-[11px] font-semibold transition-all duration-200"
         >
-          {saving ? "..." : existingPrediction ? "Zmień typ" : "Obstaw"}
+          {saving ? "..." : "OK"}
         </button>
       )}
-
-      {message && <p className="text-[10px] text-emerald-600 font-medium animate-fade-in">{message}</p>}
+      {message && <span className="text-[10px] text-emerald-600 font-medium animate-fade-in">{message}</span>}
     </form>
   );
 }

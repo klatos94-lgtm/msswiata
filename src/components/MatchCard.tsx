@@ -2,31 +2,12 @@
 
 import type { Match } from "@/types/match";
 import PredictionForm from "./PredictionForm";
+import Flag from "@/components/Flag";
 
 interface MatchCardProps {
   match: Match;
-  userPrediction?: { predicted_home: number; predicted_away: number } | null;
+  userPrediction?: { predicted_home: number; predicted_away: number; points?: number | null } | null;
   userId?: string;
-}
-
-const flags: Record<string, string> = {
-  "Polska": "🇵🇱", "Argentyna": "🇦🇷", "Niemcy": "🇩🇪", "Brazylia": "🇧🇷",
-  "Francja": "🇫🇷", "Anglia": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Hiszpania": "🇪🇸", "Włochy": "🇮🇹",
-  "Holandia": "🇳🇱", "Portugalia": "🇵🇹",
-  "Meksyk": "🇲🇽", "Republika Południowej Afryki": "🇿🇦",
-  "Korea Południowa": "🇰🇷", "Czechy": "🇨🇿",
-  "Kanada": "🇨🇦", "Bośnia i Hercegowina": "🇧🇦",
-  "USA": "🇺🇸", "Paragwaj": "🇵🇾",
-  "Haiti": "🇭🇹", "Szkocja": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-  "Australia": "🇦🇺", "Turcja": "🇹🇷",
-  "Maroko": "🇲🇦", "Katar": "🇶🇦", "Szwajcaria": "🇨🇭",
-  "Wybrzeże Kości Słoniowej": "🇨🇮", "Ekwador": "🇪🇨",
-  "Curaçao": "🇨🇼", "Japonia": "🇯🇵",
-  "Szwecja": "🇸🇪", "Tunezja": "🇹🇳",
-};
-
-function getFlag(team: string): string {
-  return flags[team] || "";
 }
 
 export default function MatchCard({ match, userPrediction, userId }: MatchCardProps) {
@@ -60,7 +41,7 @@ export default function MatchCard({ match, userPrediction, userId }: MatchCardPr
 
       <div className="flex items-center justify-between mb-1">
         <div className="flex-1 text-center">
-          <p className="text-lg leading-none">{getFlag(match.home_team)}</p>
+          <p className="text-lg leading-none"><Flag team={match.home_team} /></p>
           <p className="text-xs text-slate-800 font-semibold mt-0.5">{match.home_team}</p>
         </div>
 
@@ -79,7 +60,7 @@ export default function MatchCard({ match, userPrediction, userId }: MatchCardPr
         </div>
 
         <div className="flex-1 text-center">
-          <p className="text-lg leading-none">{getFlag(match.away_team)}</p>
+          <p className="text-lg leading-none"><Flag team={match.away_team} /></p>
           <p className="text-xs text-slate-800 font-semibold mt-0.5">{match.away_team}</p>
         </div>
       </div>
@@ -92,9 +73,7 @@ export default function MatchCard({ match, userPrediction, userId }: MatchCardPr
         <div className="text-center text-[10px] mt-0.5">
           <span className="text-slate-500">Punkty: </span>
           <span className="text-amber-600 font-bold">
-            {userPrediction && "points" in userPrediction
-              ? (userPrediction as unknown as { points: number }).points ?? "-"
-              : "-"}
+            {userPrediction.points != null ? userPrediction.points : "-"}
           </span>
         </div>
       )}

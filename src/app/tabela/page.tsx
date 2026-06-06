@@ -6,7 +6,7 @@ import { getSupabaseClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import type { Match } from "@/types/match";
 import type { Prediction } from "@/types/prediction";
-import { getFlag } from "@/lib/flags";
+import Flag from "@/components/Flag";
 
 interface UserRow {
   id: string;
@@ -115,7 +115,7 @@ export default function TabelaPage() {
                       <td className="sticky left-0 bg-white z-10 px-2 py-1.5 border-r border-slate-100">
                         <div className="text-[10px] text-slate-600 font-medium leading-tight truncate max-w-[140px]">
                           <span className="text-slate-400">{day}</span>{" "}
-                          {getFlag(match.home_team)} {match.home_team.split(" ").pop()}{" "}
+                          <Flag team={match.home_team} /> {match.home_team.split(" ").pop()}{" "}
                           {match.finished ? (
                             <span className="font-bold text-slate-800">
                               {match.home_score}:{match.away_score}
@@ -123,7 +123,7 @@ export default function TabelaPage() {
                           ) : (
                             <span className="text-slate-300">?:?</span>
                           )}{" "}
-                          {getFlag(match.away_team)} {match.away_team.split(" ").pop()}
+                          <Flag team={match.away_team} /> {match.away_team.split(" ").pop()}
                         </div>
                       </td>
                       {users.map((u) => {

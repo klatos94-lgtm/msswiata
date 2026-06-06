@@ -406,7 +406,7 @@ BEGIN
     FROM group_teams gt
     LEFT JOIN public.matches m ON (m.home_team = gt.team OR m.away_team = gt.team) AND m.finished AND m.stage = 1
     GROUP BY gt.team, gt.group_label
-  )
+  ),
   grouped AS (
     SELECT ts.group_label,
            JSON_AGG(json_build_object(

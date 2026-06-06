@@ -79,10 +79,10 @@ export default function Navbar() {
 
               <button
                 onClick={() => setMobileOpen(true)}
-                className="sm:hidden p-2 text-slate-600 hover:text-emerald-700 transition-colors -mr-2"
+                className="sm:hidden p-2 text-slate-700 hover:text-emerald-700 transition-colors -mr-2"
                 aria-label="Menu"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
@@ -100,8 +100,8 @@ export default function Navbar() {
 
       {mobileOpen && user && (
         <div className="fixed inset-0 z-50 sm:hidden">
-          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <div className="fixed right-0 top-0 h-full w-64 bg-white shadow-2xl animate-slide-up">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <div className="fixed right-0 top-0 h-full w-64 bg-white shadow-2xl">
             <div className="flex items-center justify-between px-4 h-14 border-b border-slate-200">
               <span className="font-bold text-emerald-700">Menu</span>
               <button

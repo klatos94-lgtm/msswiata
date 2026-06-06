@@ -7,7 +7,7 @@ const GLOBAL_KEY = "__msswiata_supabase_client";
 
 export function getSupabaseClient(): SupabaseClient {
   if (typeof window !== "undefined") {
-    const existing = (window as Record<string, unknown>)[GLOBAL_KEY] as SupabaseClient | undefined;
+    const existing = (window as unknown as Record<string, unknown>)[GLOBAL_KEY] as SupabaseClient | undefined;
     if (existing) return existing;
   }
 
@@ -21,7 +21,7 @@ export function getSupabaseClient(): SupabaseClient {
   });
 
   if (typeof window !== "undefined") {
-    (window as Record<string, unknown>)[GLOBAL_KEY] = client;
+    (window as unknown as Record<string, unknown>)[GLOBAL_KEY] = client;
   }
 
   return client;

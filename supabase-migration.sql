@@ -27,6 +27,9 @@ CREATE TABLE IF NOT EXISTS public.matches (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- dodaj UNIQUE constraint jeśli nie istnieje (pomija jeśli są duplikaty)
+ALTER TABLE public.matches ADD CONSTRAINT IF NOT EXISTS matches_home_away_date_key UNIQUE(home_team, away_team, match_date);
+
 CREATE TABLE IF NOT EXISTS public.predictions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
@@ -396,24 +399,28 @@ BEGIN
     LEFT JOIN public.matches m ON (m.home_team = gt.team OR m.away_team = gt.team) AND m.finished AND m.stage = 1
     GROUP BY gt.team, gt.group_label
   )
+  grouped AS (
+    SELECT ts.group_label,
+           JSON_AGG(json_build_object(
+             'team', ts.team,
+             'pld', ts.pld,
+             'w', ts.w,
+             'd', ts.d,
+             'l', ts.l,
+             'gf', ts.gf,
+             'ga', ts.ga,
+             'gd', ts.gf - ts.ga,
+             'pts', ts.w * 3 + ts.d
+           ) ORDER BY (ts.w * 3 + ts.d) DESC, (ts.gf - ts.ga) DESC, ts.gf DESC) AS teams
+    FROM team_stats ts
+    GROUP BY ts.group_label
+  )
   SELECT JSON_AGG(json_build_object(
-    'group_label', ts.group_label,
-    'teams', (SELECT JSON_AGG(json_build_object(
-      'team', ts2.team,
-      'pld', ts2.pld,
-      'w', ts2.w,
-      'd', ts2.d,
-      'l', ts2.l,
-      'gf', ts2.gf,
-      'ga', ts2.ga,
-      'gd', ts2.gf - ts2.ga,
-      'pts', ts2.w * 3 + ts2.d
-    ) ORDER BY (ts2.w * 3 + ts2.d) DESC, (ts2.gf - ts2.ga) DESC, ts2.gf DESC)
-    FROM team_stats ts2 WHERE ts2.group_label = ts.group_label)
-  ) ORDER BY ts.group_label)
+    'group_label', grouped.group_label,
+    'teams', grouped.teams
+  ) ORDER BY grouped.group_label)
   INTO v_result
-  FROM team_stats ts
-  GROUP BY ts.group_label;
+  FROM grouped;
 
   RETURN COALESCE(v_result, '[]'::JSON);
 END;

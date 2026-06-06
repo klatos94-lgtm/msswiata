@@ -1,5 +1,7 @@
 -- Seed: wgraj mecze do tabeli matches
 -- Wykonaj w SQL Editorze po wcześniejszym uruchomieniu supabase-migration.sql
+-- Jeśli są zduplikowane mecze (przed dodaniem UNIQUE constraint), uruchom najpierw:
+--   DELETE FROM public.matches WHERE id NOT IN (SELECT MIN(id) FROM public.matches GROUP BY home_team, away_team, match_date);
 
 INSERT INTO public.matches (round, stage, home_team, away_team, match_date) VALUES
 (1, 1, 'Meksyk', 'Republika Południowej Afryki', '2026-06-11T19:00:00Z'),

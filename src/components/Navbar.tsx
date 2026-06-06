@@ -13,6 +13,16 @@ export default function Navbar() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const checkAdmin = async (userId: string) => {
+    const supabase = getSupabaseClient();
+    const { data } = await supabase
+      .from("admins")
+      .select("user_id")
+      .eq("user_id", userId)
+      .maybeSingle();
+    setIsAdmin(!!data);
+  };
+
   useEffect(() => {
     const supabase = getSupabaseClient();
     supabase.auth.getUser().then(({ data }) => {
@@ -27,16 +37,6 @@ export default function Navbar() {
 
     return () => listener?.subscription.unsubscribe();
   }, []);
-
-  const checkAdmin = async (userId: string) => {
-    const supabase = getSupabaseClient();
-    const { data } = await supabase
-      .from("admins")
-      .select("user_id")
-      .eq("user_id", userId)
-      .maybeSingle();
-    setIsAdmin(!!data);
-  };
 
   const handleLogout = async () => {
     const supabase = getSupabaseClient();

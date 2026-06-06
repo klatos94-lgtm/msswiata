@@ -28,6 +28,13 @@ export default function GrupyPage() {
   const [groups, setGroups] = useState<GroupData[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const loadData = async () => {
+    const supabase = getSupabaseClient();
+    const { data } = await supabase.rpc("get_group_table");
+    if (Array.isArray(data)) setGroups(data);
+    setLoading(false);
+  };
+
   useEffect(() => {
     const supabase = getSupabaseClient();
     supabase.auth.getUser().then(({ data }) => {
@@ -39,13 +46,6 @@ export default function GrupyPage() {
       loadData();
     });
   }, []);
-
-  const loadData = async () => {
-    const supabase = getSupabaseClient();
-    const { data } = await supabase.rpc("get_group_table");
-    if (Array.isArray(data)) setGroups(data);
-    setLoading(false);
-  };
 
   if (!user) return null;
 

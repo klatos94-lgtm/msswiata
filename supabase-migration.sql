@@ -206,6 +206,10 @@ DECLARE
   v_stage INT;
   v_mult INT;
 BEGIN
+  IF NOT EXISTS (SELECT 1 FROM public.admins WHERE user_id = auth.uid()) THEN
+    RAISE EXCEPTION 'Not authorized';
+  END IF;
+
   SELECT stage INTO v_stage FROM public.matches WHERE id = p_match_id;
   v_mult := CASE WHEN v_stage >= 2 THEN 2 ELSE 1 END;
 
@@ -246,6 +250,10 @@ DECLARE
   v_stage INT;
   v_mult INT;
 BEGIN
+  IF NOT EXISTS (SELECT 1 FROM public.admins WHERE user_id = auth.uid()) THEN
+    RAISE EXCEPTION 'Not authorized';
+  END IF;
+
   SELECT stage INTO v_stage FROM public.matches WHERE id = p_match_id;
   v_mult := CASE WHEN v_stage >= 2 THEN 2 ELSE 1 END;
 

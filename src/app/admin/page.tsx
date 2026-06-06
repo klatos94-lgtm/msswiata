@@ -18,17 +18,12 @@ export default function AdminPage() {
   const [finishingId, setFinishingId] = useState<string | null>(null);
   const [recalculatingId, setRecalculatingId] = useState<string | null>(null);
 
-  useEffect(() => {
-    checkAdmin();
-    loadMatches();
-  }, []);
-
-  const checkAdmin = async () => {
+  const checkAdmin = async (): Promise<boolean> => {
     const supabase = getSupabaseClient();
     const { data: userData } = await supabase.auth.getUser();
     if (!userData.user) {
       router.push("/login");
-      return;
+      return false;
     }
 
     const { data: { session } } = await supabase.auth.getSession();
@@ -47,21 +42,25 @@ export default function AdminPage() {
     );
     const adminRows = await res.json();
 
-    if (Array.isArray(adminRows) && adminRows.length > 0) {
-      setIsAdmin(true);
-    } else {
-      router.push("/dashboard");
-    }
+    return Array.isArray(adminRows) && adminRows.length > 0;
   };
 
-  const loadMatches = async () => {
+  const loadMatches = async (): Promise<Match[]> => {
     const supabase = getSupabaseClient();
     const { data } = await supabase
       .from("matches")
       .select("*")
       .order("match_date", { ascending: true });
-    if (data) setMatches(data);
+    return data ?? [];
   };
+
+  useEffect(() => {
+    checkAdmin().then(isAdmin => {
+      if (!isAdmin) router.push("/dashboard");
+      else setIsAdmin(true);
+    });
+    loadMatches().then(setMatches);
+  }, []);
 
   const handleAddMatch = async (e: React.FormEvent) => {
     e.preventDefault();

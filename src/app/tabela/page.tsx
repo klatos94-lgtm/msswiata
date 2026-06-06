@@ -21,6 +21,17 @@ export default function TabelaPage() {
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const loadData = async () => {
+    const supabase = getSupabaseClient();
+    const { data } = await supabase.rpc("get_cartesian_table");
+    if (data) {
+      if (Array.isArray(data.users)) setUsers(data.users);
+      if (Array.isArray(data.matches)) setMatches(data.matches);
+      if (Array.isArray(data.predictions)) setPredictions(data.predictions);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     const supabase = getSupabaseClient();
     supabase.auth.getUser().then(({ data }) => {
@@ -32,17 +43,6 @@ export default function TabelaPage() {
       loadData();
     });
   }, []);
-
-  const loadData = async () => {
-    const supabase = getSupabaseClient();
-    const { data } = await supabase.rpc("get_cartesian_table");
-    if (data) {
-      if (Array.isArray(data.users)) setUsers(data.users);
-      if (Array.isArray(data.matches)) setMatches(data.matches);
-      if (Array.isArray(data.predictions)) setPredictions(data.predictions);
-    }
-    setLoading(false);
-  };
 
   const predictionMap = new Map<string, Prediction>();
   for (const p of predictions) {

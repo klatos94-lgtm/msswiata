@@ -19,18 +19,6 @@ export default function DashboardPage() {
   const [correctResults, setCorrectResults] = useState(0);
   const [exactScores, setExactScores] = useState(0);
 
-  useEffect(() => {
-    const supabase = getSupabaseClient();
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) {
-        router.push("/login");
-        return;
-      }
-      setUser(data.user);
-      loadData(data.user.id);
-    });
-  }, []);
-
   const loadData = async (userId: string) => {
     const supabase = getSupabaseClient();
     const { data } = await supabase.rpc("get_dashboard", { p_user_id: userId });
@@ -43,6 +31,18 @@ export default function DashboardPage() {
       setUserPredictions(data.predictions ?? []);
     }
   };
+
+  useEffect(() => {
+    const supabase = getSupabaseClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) {
+        router.push("/login");
+        return;
+      }
+      setUser(data.user);
+      loadData(data.user.id);
+    });
+  }, []);
 
   if (!user) return null;
 

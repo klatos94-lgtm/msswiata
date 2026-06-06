@@ -18,18 +18,6 @@ export default function LeaderboardPage() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [userPredictions, setUserPredictions] = useState<Prediction[]>([]);
 
-  useEffect(() => {
-    const supabase = getSupabaseClient();
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) {
-        router.push("/login");
-        return;
-      }
-      loadLeaderboard();
-      loadMatches();
-    });
-  }, []);
-
   const loadLeaderboard = async () => {
     const supabase = getSupabaseClient();
     const { data } = await supabase.rpc("get_leaderboard");
@@ -51,6 +39,18 @@ export default function LeaderboardPage() {
       .order("match_date", { ascending: true });
     if (data) setMatches(data);
   };
+
+  useEffect(() => {
+    const supabase = getSupabaseClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) {
+        router.push("/login");
+        return;
+      }
+      loadLeaderboard();
+      loadMatches();
+    });
+  }, []);
 
   const handleSelectUser = async (userId: string) => {
     if (selectedUserId === userId) {

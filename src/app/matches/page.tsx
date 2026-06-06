@@ -110,6 +110,15 @@ export default function MatchesPage() {
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [activeRound, setActiveRound] = useState(0);
 
+  const loadData = async (userId: string) => {
+    const supabase = getSupabaseClient();
+    const { data } = await supabase.rpc("get_matches_with_predictions", { p_user_id: userId });
+    if (data) {
+      if (Array.isArray(data.matches)) setMatches(data.matches);
+      if (Array.isArray(data.predictions)) setPredictions(data.predictions);
+    }
+  };
+
   useEffect(() => {
     const supabase = getSupabaseClient();
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -121,17 +130,6 @@ export default function MatchesPage() {
       loadData(session.user.id);
     });
   }, []);
-
-
-
-  const loadData = async (userId: string) => {
-    const supabase = getSupabaseClient();
-    const { data } = await supabase.rpc("get_matches_with_predictions", { p_user_id: userId });
-    if (data) {
-      if (Array.isArray(data.matches)) setMatches(data.matches);
-      if (Array.isArray(data.predictions)) setPredictions(data.predictions);
-    }
-  };
 
   if (!user) return null;
 

@@ -27,8 +27,16 @@ CREATE TABLE IF NOT EXISTS public.matches (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- dodaj UNIQUE constraint jeśli nie istnieje (pomija jeśli są duplikaty)
-ALTER TABLE public.matches ADD CONSTRAINT IF NOT EXISTS matches_home_away_date_key UNIQUE(home_team, away_team, match_date);
+-- dodaj UNIQUE constraint jeśli nie istnieje
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'matches_home_away_date_key' AND conrelid = 'public.matches'::regclass
+  ) THEN
+    ALTER TABLE public.matches ADD CONSTRAINT matches_home_away_date_key UNIQUE(home_team, away_team, match_date);
+  END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS public.predictions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

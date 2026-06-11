@@ -16,7 +16,7 @@ const barlowCondensed = Barlow_Condensed({
 });
 
 export const metadata: Metadata = {
-  title: "Latoss Betting",
+  title: "Typer - Mundial 2026",
   description: "Obstawiaj wyniki Mistrzostw Świata",
 };
 

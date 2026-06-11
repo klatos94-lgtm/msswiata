@@ -62,7 +62,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-14">
             <Link href="/" className="flex items-center gap-2 text-lg font-bold text-emerald-700 hover:text-emerald-800 transition-colors tracking-tight">
               <img src="/fifa-logo.png" alt="FIFA" className="h-7 w-auto" />
-              <span className="hidden sm:inline">Latoss Betting</span><span className="sm:hidden">Latoss</span>
+              <span className="hidden sm:inline">Typer - Mundial 2026</span><span className="sm:hidden">Typer</span>
             </Link>
 
             {user ? (

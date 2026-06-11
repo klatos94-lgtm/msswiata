@@ -461,8 +461,8 @@ BEGIN
     SELECT
       p.user_id,
       p.match_id,
-      CASE WHEN p.user_id = auth.uid() OR m.finished THEN p.predicted_home ELSE NULL END AS predicted_home,
-      CASE WHEN p.user_id = auth.uid() OR m.finished THEN p.predicted_away ELSE NULL END AS predicted_away,
+      CASE WHEN p.user_id = auth.uid() OR m.match_date <= NOW() THEN p.predicted_home ELSE NULL END AS predicted_home,
+      CASE WHEN p.user_id = auth.uid() OR m.match_date <= NOW() THEN p.predicted_away ELSE NULL END AS predicted_away,
       CASE WHEN m.finished THEN p.points ELSE NULL END AS points
     FROM public.predictions p
     JOIN public.matches m ON m.id = p.match_id
@@ -512,7 +512,7 @@ BEGIN
     FROM (
       SELECT p.match_id, p.predicted_home, p.predicted_away, p.points
       FROM public.predictions p
-      JOIN public.matches m ON m.id = p.match_id AND m.finished
+      JOIN public.matches m ON m.id = p.match_id AND m.match_date <= NOW()
       WHERE p.user_id = p_user_id
     ) p;
   END IF;

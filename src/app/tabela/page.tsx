@@ -132,7 +132,7 @@ export default function TabelaPage() {
                         let cellClass = "px-1 py-0.5 sm:px-1.5 sm:py-1 text-center border-r border-slate-100 last:border-r-0";
                         if (isCurrentUser) cellClass += " bg-emerald-50/40";
 
-                        if (!match.finished) {
+                        if (!pred || pred.predicted_home === null) {
                           return (
                             <td key={match.id} className={cellClass}>
                               <span className="text-slate-300">—</span>
@@ -140,10 +140,12 @@ export default function TabelaPage() {
                           );
                         }
 
-                        if (!pred) {
+                        if (!match.finished) {
                           return (
                             <td key={match.id} className={cellClass}>
-                              <span className="text-red-300">—</span>
+                              <span className="text-[11px] font-semibold tabular-nums text-slate-500">
+                                {pred.predicted_home}:{pred.predicted_away}
+                              </span>
                             </td>
                           );
                         }

@@ -18,37 +18,40 @@ export default function LeaderboardTable({ entries, onSelect }: LeaderboardTable
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-left">
+      <table className="w-full">
         <thead>
-          <tr className="border-b border-slate-200 text-slate-500 text-sm uppercase tracking-wider">
-            <th className="pb-3 pt-3 pr-4 w-10">#</th>
-            <th className="pb-3 pt-3 pr-4">Użytkownik</th>
-            <th className="pb-3 pt-3 text-right">Punkty</th>
+          <tr className="border-b border-slate-200 text-slate-500 text-[10px] uppercase tracking-wider">
+            <th className="pb-3 pt-4 pl-4 sm:pl-5 w-10">#</th>
+            <th className="pb-3 pt-4 pr-4">Użytkownik</th>
+            <th className="pb-3 pt-4 pr-4 sm:pr-5 text-right">Punkty</th>
           </tr>
         </thead>
         <tbody>
           {entries.map((entry, index) => {
-            const rowClass = index === 0
-              ? "bg-amber-50/50 border-b border-amber-200 hover:bg-amber-100/50"
+            const isTop3 = index < 3;
+            const rowClass = isTop3
+              ? "bg-gradient-to-r from-amber-50/80 to-white border-b border-amber-100 hover:bg-amber-100/60"
               : "border-b border-slate-100 hover:bg-emerald-50/50";
+
             return (
-              <tr key={entry.user_id} onClick={() => onSelect?.(entry.user_id)} className={`cursor-pointer transition-colors duration-150 ${rowClass}`}>
-                <td className="py-3 pr-4 w-10 text-center align-middle">
-                  {index < 3 ? (
-                    <span className="text-base">{medals[index]}</span>
+              <tr key={entry.user_id} onClick={() => onSelect?.(entry.user_id)} className={`cursor-pointer transition-all duration-150 ${rowClass}`}>
+                <td className="pl-4 sm:pl-5 pr-3 py-2.5 text-center align-middle">
+                  {isTop3 ? (
+                    <span className="text-lg">{medals[index]}</span>
                   ) : (
-                    <span className="text-slate-400 font-medium text-sm">{index + 1}</span>
+                    <span className="text-slate-400 font-semibold text-sm">{index + 1}</span>
                   )}
                 </td>
-                <td className="py-3 pr-4 align-middle">
-                  <span className={`${index < 3 ? "text-amber-900" : "text-slate-800"} font-medium`}>
+                <td className="pr-4 py-2.5 align-middle">
+                  <span className={`font-semibold text-sm ${isTop3 ? "text-amber-900" : "text-slate-800"}`}>
                     {entry.nickname}
                   </span>
                 </td>
-                <td className="py-3 text-right align-middle">
-                  <span className={`font-bold text-xl tabular-nums text-amber-600`}>
+                <td className="pr-4 sm:pr-5 py-2.5 text-right align-middle">
+                  <span className="font-extrabold text-xl tabular-nums text-amber-600">
                     {entry.total_points}
                   </span>
+                  <span className="text-[10px] font-medium text-amber-400 ml-0.5">pkt</span>
                 </td>
               </tr>
             );

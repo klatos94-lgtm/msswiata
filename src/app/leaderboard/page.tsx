@@ -71,48 +71,61 @@ export default function LeaderboardPage() {
   const finishedMatches = matches.filter((m) => m.finished);
 
   return (
-    <div className="animate-fade-in">
-      <div className="bg-[#001e28] rounded-xl overflow-hidden shadow-lg mb-6">
-        <div className="flex items-center gap-3 px-5 py-4">
-          <div className="w-9 h-9 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-            <span className="text-xl">🏆</span>
+    <div className="animate-fade-in space-y-4">
+      <div className="bg-gradient-to-br from-slate-900 to-[#001e28] rounded-2xl shadow-lg px-5 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center ring-1 ring-emerald-500/20">
+              <span className="text-lg">🏆</span>
+            </div>
+            <div>
+              <h1 className="text-white font-bold text-base leading-tight">Ranking</h1>
+              <p className="text-emerald-400/80 text-[11px] font-medium">Klasyfikacja graczy</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-white font-bold text-base leading-tight">Ranking</h1>
-            <p className="text-emerald-400 text-[11px] font-medium">Klasyfikacja graczy</p>
-          </div>
+          {entries.length > 0 && (
+            <div className="hidden sm:flex items-center gap-2 text-[10px] text-slate-400">
+              <span className="font-medium text-slate-300">{entries.length}</span> uczestników
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-6">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         {loading ? (
-          <div className="text-center py-8 text-slate-400">Ładowanie...</div>
+          <div className="p-8">
+            <div className="space-y-3">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="h-10 bg-slate-100 rounded-lg animate-pulse" style={{ width: `${60 + Math.random() * 40}%` }} />
+              ))}
+            </div>
+          </div>
         ) : (
           <LeaderboardTable entries={entries} onSelect={handleSelectUser} />
         )}
       </div>
 
       {selectedUserId && selectedUser && (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden animate-slide-up">
-          <div className="bg-[#001e28] px-4 py-2.5 flex items-center justify-between">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden animate-slide-up">
+          <div className="bg-gradient-to-r from-slate-900 to-[#001e28] px-5 py-3 flex items-center justify-between">
             <div>
-              <div className="text-white text-sm font-bold">
+              <div className="text-white font-bold text-sm flex items-center gap-2">
                 {selectedUser.nickname || "Nieznany"}
-              </div>
-              <div className="text-slate-400 text-[10px] font-medium">
-                Zakończone mecze &middot; {finishedMatches.length} meczów
+                <span className="text-[10px] font-medium text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded-full">
+                  {finishedMatches.length} meczów
+                </span>
               </div>
             </div>
             <button
               onClick={() => setSelectedUserId(null)}
-              className="text-slate-400 hover:text-white text-sm"
+              className="text-slate-400 hover:text-white transition-colors text-sm w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white/10"
             >
               ✕
             </button>
           </div>
           <div>
             {finishedMatches.length === 0 ? (
-              <div className="text-center py-6 text-slate-400 text-sm">
+              <div className="text-center py-8 text-slate-400 text-sm">
                 Brak zakończonych meczów.
               </div>
             ) : (
@@ -121,32 +134,38 @@ export default function LeaderboardPage() {
                 const matchDate = new Date(match.match_date);
                 const day = `${String(matchDate.getDate()).padStart(2, "0")}.${String(matchDate.getMonth() + 1).padStart(2, "0")}.`;
                 return (
-                  <div key={match.id} className="grid grid-cols-[auto_1fr_auto_1fr_auto] gap-1.5 items-center px-3 py-2 hover:bg-slate-50/60 transition-colors border-b border-slate-100 last:border-b-0">
-                    <div className="w-14 text-center">
-                      <div className="text-[10px] font-bold text-slate-400 uppercase">{day}</div>
+                  <div key={match.id} className="grid grid-cols-[auto_1fr_auto_1fr_auto] gap-1.5 items-center px-4 sm:px-5 py-2.5 hover:bg-slate-50/60 transition-colors border-b border-slate-100 last:border-b-0">
+                    <div className="w-12 text-center">
+                      <div className="text-[9px] font-bold text-slate-400 uppercase">{day}</div>
                     </div>
-                    <div className="flex items-center justify-end gap-1 min-w-0">
+                    <div className="flex items-center justify-end gap-1.5 min-w-0">
                       <span className="text-[13px] font-semibold text-slate-700 truncate text-right">{match.home_team}</span>
                       <Flag team={match.home_team} className="flex-shrink-0" />
                     </div>
-                    <div className="text-center">
+                    <div className="text-center min-w-[36px]">
                       <span className="text-sm font-extrabold text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded-md tabular-nums">
                         {match.home_score}:{match.away_score}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1 min-w-0">
+                    <div className="flex items-center gap-1.5 min-w-0">
                       <Flag team={match.away_team} className="flex-shrink-0" />
                       <span className="text-[13px] font-semibold text-slate-700 truncate">{match.away_team}</span>
                     </div>
                     <div className="text-right">
                       {pred ? (
-                        <div>
-                          <span className="text-[10px] font-semibold text-amber-600 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-full">
+                        <div className="flex items-center gap-1.5 justify-end">
+                          <span className="text-[10px] font-semibold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
                             {pred.predicted_home}:{pred.predicted_away}
                           </span>
                           {pred.points !== null && pred.points !== undefined && (
-                            <span className="text-[10px] font-bold text-emerald-600 ml-1">
-                              +{pred.points}pkt
+                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                              pred.points >= 3
+                                ? "text-emerald-600 bg-emerald-50 border border-emerald-200"
+                                : pred.points >= 1
+                                ? "text-amber-600 bg-amber-50 border border-amber-200"
+                                : "text-red-400 bg-red-50 border border-red-200"
+                            }`}>
+                              +{pred.points}
                             </span>
                           )}
                         </div>

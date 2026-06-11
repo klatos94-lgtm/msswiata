@@ -21,9 +21,9 @@ export default function LeaderboardTable({ entries, onSelect }: LeaderboardTable
       <table className="w-full text-left">
         <thead>
           <tr className="border-b border-slate-200 text-slate-500 text-sm uppercase tracking-wider">
-            <th className="pb-3 pr-4">#</th>
-            <th className="pb-3 pr-4">Użytkownik</th>
-            <th className="pb-3 text-right">Punkty</th>
+            <th className="pb-3 pt-3 pr-4 w-10">#</th>
+            <th className="pb-3 pt-3 pr-4">Użytkownik</th>
+            <th className="pb-3 pt-3 text-right">Punkty</th>
           </tr>
         </thead>
         <tbody>
@@ -33,20 +33,20 @@ export default function LeaderboardTable({ entries, onSelect }: LeaderboardTable
               : "border-b border-slate-100 hover:bg-emerald-50/50";
             return (
               <tr key={entry.user_id} onClick={() => onSelect?.(entry.user_id)} className={`cursor-pointer transition-colors duration-150 ${rowClass}`}>
-                <td className="py-3 pr-4">
+                <td className="py-3 pr-4 w-10 text-center align-middle">
                   {index < 3 ? (
-                    <span className="text-xl">{medals[index]}</span>
+                    <span className="text-base">{medals[index]}</span>
                   ) : (
-                    <span className="text-slate-400 font-medium">{index + 1}</span>
+                    <span className="text-slate-400 font-medium text-sm">{index + 1}</span>
                   )}
                 </td>
-                <td className="py-3 pr-4">
-                  <span className={`${index === 0 ? "text-amber-900" : "text-slate-800"} font-medium`}>
+                <td className="py-3 pr-4 align-middle">
+                  <span className={`${index < 3 ? "text-amber-900" : "text-slate-800"} font-medium`}>
                     {entry.nickname}
                   </span>
                 </td>
-                <td className="py-3 text-right">
-                  <span className={`font-bold text-xl tabular-nums ${index === 0 ? "text-amber-600" : "text-amber-600"}`}>
+                <td className="py-3 text-right align-middle">
+                  <span className={`font-bold text-xl tabular-nums text-amber-600`}>
                     {entry.total_points}
                   </span>
                 </td>

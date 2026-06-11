@@ -121,24 +121,24 @@ export default function LeaderboardPage() {
                 const matchDate = new Date(match.match_date);
                 const day = `${String(matchDate.getDate()).padStart(2, "0")}.${String(matchDate.getMonth() + 1).padStart(2, "0")}.`;
                 return (
-                  <div key={match.id} className="flex items-center px-3 py-2 gap-2 hover:bg-slate-50/60 transition-colors border-b border-slate-100 last:border-b-0">
-                    <div className="w-14 flex-shrink-0 text-center">
+                  <div key={match.id} className="grid grid-cols-[auto_1fr_auto_1fr_auto] gap-1.5 items-center px-3 py-2 hover:bg-slate-50/60 transition-colors border-b border-slate-100 last:border-b-0">
+                    <div className="w-14 text-center">
                       <div className="text-[10px] font-bold text-slate-400 uppercase">{day}</div>
                     </div>
-                    <div className="flex-1 flex items-center justify-end gap-1 min-w-0">
-                      <span className="text-[13px] font-semibold text-slate-700 truncate text-right max-w-[90px]">{match.home_team}</span>
+                    <div className="flex items-center justify-end gap-1 min-w-0">
+                      <span className="text-[13px] font-semibold text-slate-700 truncate text-right">{match.home_team}</span>
                       <Flag team={match.home_team} className="flex-shrink-0" />
                     </div>
-                    <div className="flex-shrink-0 text-center min-w-[40px]">
+                    <div className="text-center">
                       <span className="text-sm font-extrabold text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded-md tabular-nums">
                         {match.home_score}:{match.away_score}
                       </span>
                     </div>
-                    <div className="flex-1 flex items-center gap-1 min-w-0">
+                    <div className="flex items-center gap-1 min-w-0">
                       <Flag team={match.away_team} className="flex-shrink-0" />
-                      <span className="text-[13px] font-semibold text-slate-700 truncate max-w-[90px]">{match.away_team}</span>
+                      <span className="text-[13px] font-semibold text-slate-700 truncate">{match.away_team}</span>
                     </div>
-                    <div className="w-16 flex-shrink-0 text-right">
+                    <div className="text-right">
                       {pred ? (
                         <div>
                           <span className="text-[10px] font-semibold text-amber-600 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-full">

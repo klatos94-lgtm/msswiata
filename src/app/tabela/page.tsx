@@ -146,8 +146,8 @@ export default function TabelaPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-none sm:rounded-2xl border border-slate-200 shadow-sm overflow-hidden -mx-4 sm:-mx-0">
-          <div className="overflow-x-auto">
+        <div className="bg-white rounded-none sm:rounded-2xl border border-slate-200 shadow-sm -mx-4 sm:-mx-0">
+          <div className="overflow-x-auto" style={{ overflowY: "clip" }}>
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="bg-slate-50">

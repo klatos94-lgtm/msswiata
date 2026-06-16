@@ -77,7 +77,8 @@ export default function TabelaPage() {
     const status = getMatchStatus(match);
 
     let cellClass = "px-1 sm:px-1.5 py-1 text-center";
-    if (isCurrentUser) cellClass += " bg-emerald-50/60";
+    if (isCurrentUser) cellClass += " ring-2 ring-emerald-400 ring-inset";
+    const textWeight = isCurrentUser ? "font-extrabold" : "font-semibold";
 
     if (!pred || pred.predicted_home === null) {
       let dash = "text-slate-300";
@@ -93,7 +94,7 @@ export default function TabelaPage() {
     if (status !== "finished") {
       return (
         <td key={`${u.id}_${match.id}`} className={cellClass}>
-          <span className="text-[11px] font-semibold tabular-nums text-slate-600">
+          <span className={`text-[11px] ${textWeight} tabular-nums text-slate-600`}>
             {pred.predicted_home}:{pred.predicted_away}
           </span>
         </td>
@@ -111,7 +112,7 @@ export default function TabelaPage() {
       "bg-red-50/50";
     return (
       <td key={`${u.id}_${match.id}`} className={`${cellClass} ${bgClass}`}>
-        <span className={`text-[11px] font-semibold tabular-nums ${colorClass}`}>
+        <span className={`text-[11px] ${textWeight} tabular-nums ${colorClass}`}>
           {pred.predicted_home}:{pred.predicted_away}
         </span>
       </td>
@@ -162,10 +163,10 @@ export default function TabelaPage() {
                     <th
                       key={u.id}
                       style={{ width: users.length > 10 ? 44 : 52 }}
-                      className={`sticky top-0 z-20 px-1 py-2 text-center font-medium sm:w-[72px] ${
+                      className={`sticky top-0 z-20 px-1 py-2 text-center sm:w-[72px] ${
                         u.id === user.id
-                          ? "bg-emerald-50 text-emerald-700"
-                          : "bg-slate-50 text-slate-500"
+                          ? "bg-slate-50 text-emerald-700 font-extrabold ring-2 ring-emerald-400 ring-inset"
+                          : "bg-slate-50 text-slate-500 font-medium"
                       }`}
                     >
                       <div className="text-[9px] sm:text-[10px] leading-tight truncate max-w-[44px] sm:max-w-[64px] mx-auto">

@@ -14,6 +14,7 @@ export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<{ nickname: string } | null>(null);
   const [todayMatches, setTodayMatches] = useState<Match[]>([]);
+  const [tomorrowMatches, setTomorrowMatches] = useState<Match[]>([]);
   const [userPredictions, setUserPredictions] = useState<Prediction[]>([]);
   const [totalPoints, setTotalPoints] = useState(0);
   const [correctResults, setCorrectResults] = useState(0);
@@ -28,6 +29,7 @@ export default function DashboardPage() {
       setCorrectResults(data.correct_results ?? 0);
       setExactScores(data.exact_scores ?? 0);
       setTodayMatches(data.today_matches ?? []);
+      setTomorrowMatches(data.tomorrow_matches ?? []);
       setUserPredictions(data.predictions ?? []);
     }
   };
@@ -86,102 +88,107 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="animate-slide-up">
-        <h2 className="text-sm font-bold text-slate-700 mb-2 uppercase tracking-wider">
-          {todayMatches.length > 0 ? "Mecze dzisiaj" : "Brak meczów dzisiaj"}
-        </h2>
+      {["Dzisiaj", "Jutro"].map((label) => {
+        const matches = label === "Dzisiaj" ? todayMatches : tomorrowMatches;
+        return (
+          <div key={label} className="animate-slide-up">
+            <h2 className="text-sm font-bold text-slate-700 mb-2 uppercase tracking-wider">
+              {matches.length > 0 ? `Mecze ${label.toLowerCase()}` : `Brak meczów ${label.toLowerCase()}`}
+            </h2>
 
-        {todayMatches.length === 0 ? (
-          <div className="bg-white rounded-xl border border-slate-200 p-8 text-center shadow-sm">
-            <p className="text-slate-500 text-sm">Dzisiaj nie ma żadnych meczów.</p>
-          </div>
-        ) : (
-          <div className="space-y-1.5">
-            {todayMatches.map((match) => {
-              const pred = userPredictions.find((p) => p.match_id === match.id) || null;
-              const matchDate = new Date(match.match_date);
-              const now = new Date();
-              const locked = matchDate <= now;
-              const finished = match.finished;
+            {matches.length === 0 ? (
+              <div className="bg-white rounded-xl border border-slate-200 p-8 text-center shadow-sm">
+                <p className="text-slate-500 text-sm">{label} nie ma żadnych meczów.</p>
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                {matches.map((match) => {
+                  const pred = userPredictions.find((p) => p.match_id === match.id) || null;
+                  const matchDate = new Date(match.match_date);
+                  const now = new Date();
+                  const locked = matchDate <= now;
+                  const finished = match.finished;
 
-              return (
-                <div
-                  key={match.id}
-                  className={`bg-white rounded-xl border shadow-sm transition-all ${
-                    locked && !finished
-                      ? "border-red-400 bg-red-50/30"
-                      : finished
-                      ? "border-slate-200"
-                      : "border-emerald-200"
-                  }`}
-                >
-                  <div className="flex items-center px-3 py-2.5 gap-2">
-                    <div className="w-16 flex-shrink-0 text-center">
-                      <div className="text-[10px] font-bold text-slate-400 uppercase leading-tight">
-                        {`${String(matchDate.getDate()).padStart(2, "0")}.${String(matchDate.getMonth() + 1).padStart(2, "0")}.`}
+                  return (
+                    <div
+                      key={match.id}
+                      className={`bg-white rounded-xl border shadow-sm transition-all ${
+                        locked && !finished
+                          ? "border-red-400 bg-red-50/30"
+                          : finished
+                          ? "border-slate-200"
+                          : "border-emerald-200"
+                      }`}
+                    >
+                      <div className="flex items-center px-3 py-2.5 gap-2">
+                        <div className="w-16 flex-shrink-0 text-center">
+                          <div className="text-[10px] font-bold text-slate-400 uppercase leading-tight">
+                            {`${String(matchDate.getDate()).padStart(2, "0")}.${String(matchDate.getMonth() + 1).padStart(2, "0")}.`}
+                          </div>
+                          <div className="text-[11px] font-bold text-slate-700 tabular-nums">
+                            {matchDate.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" })}
+                          </div>
+                        </div>
+
+                        <div className="flex-1 flex items-center justify-end gap-1.5 min-w-0">
+                          <span className="text-[13px] font-semibold text-slate-700 truncate text-right max-w-[110px]">
+                            {match.home_team}
+                          </span>
+                          <Flag team={match.home_team} className="flex-shrink-0" />
+                        </div>
+
+                        <div className="flex-shrink-0 min-w-[50px] text-center">
+                          {finished && match.home_score !== null ? (
+                            <span className="text-sm font-extrabold text-slate-800 tabular-nums bg-slate-100 px-2 py-0.5 rounded-md">
+                              {match.home_score}:{match.away_score}
+                            </span>
+                          ) : locked ? (
+                            <span className="text-[10px] font-bold text-red-400">🔒</span>
+                          ) : (
+                            <span className="text-[10px] font-bold text-emerald-600">VS</span>
+                          )}
+                        </div>
+
+                        <div className="flex-1 flex items-center gap-1.5 min-w-0">
+                          <Flag team={match.away_team} className="flex-shrink-0" />
+                          <span className="text-[13px] font-semibold text-slate-700 truncate max-w-[110px]">
+                            {match.away_team}
+                          </span>
+                        </div>
+
+                        <div className="w-14 flex-shrink-0 text-right">
+                          {pred ? (
+                            <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
+                              finished
+                                ? "text-emerald-600 bg-emerald-50"
+                                : "text-amber-600 bg-amber-50 border border-amber-200"
+                            }`}>
+                              {pred.predicted_home}:{pred.predicted_away}
+                            </span>
+                          ) : locked ? (
+                            <span className="text-[10px] text-slate-400">—</span>
+                          ) : null}
+                        </div>
                       </div>
-                      <div className="text-[11px] font-bold text-slate-700 tabular-nums">
-                        {matchDate.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" })}
-                      </div>
-                    </div>
 
-                    <div className="flex-1 flex items-center justify-end gap-1.5 min-w-0">
-                      <span className="text-[13px] font-semibold text-slate-700 truncate text-right max-w-[110px]">
-                        {match.home_team}
-                      </span>
-                      <Flag team={match.home_team} className="flex-shrink-0" />
-                    </div>
-
-                    <div className="flex-shrink-0 min-w-[50px] text-center">
-                      {finished && match.home_score !== null ? (
-                        <span className="text-sm font-extrabold text-slate-800 tabular-nums bg-slate-100 px-2 py-0.5 rounded-md">
-                          {match.home_score}:{match.away_score}
-                        </span>
-                      ) : locked ? (
-                        <span className="text-[10px] font-bold text-red-400">🔒</span>
-                      ) : (
-                        <span className="text-[10px] font-bold text-emerald-600">VS</span>
+                      {!locked && !finished && (
+                        <div className="pb-2 px-3">
+                          <PredictionForm
+                            matchId={match.id}
+                            userId={user.id}
+                            matchDate={match.match_date}
+                            existingPrediction={pred}
+                          />
+                        </div>
                       )}
                     </div>
-
-                    <div className="flex-1 flex items-center gap-1.5 min-w-0">
-                      <Flag team={match.away_team} className="flex-shrink-0" />
-                      <span className="text-[13px] font-semibold text-slate-700 truncate max-w-[110px]">
-                        {match.away_team}
-                      </span>
-                    </div>
-
-                    <div className="w-14 flex-shrink-0 text-right">
-                      {pred ? (
-                        <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
-                          finished
-                            ? "text-emerald-600 bg-emerald-50"
-                            : "text-amber-600 bg-amber-50 border border-amber-200"
-                        }`}>
-                          {pred.predicted_home}:{pred.predicted_away}
-                        </span>
-                      ) : locked ? (
-                        <span className="text-[10px] text-slate-400">—</span>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  {!locked && !finished && (
-                    <div className="pb-2 px-3">
-                      <PredictionForm
-                        matchId={match.id}
-                        userId={user.id}
-                        matchDate={match.match_date}
-                        existingPrediction={pred}
-                      />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        );
+      })}
     </div>
   );
 }

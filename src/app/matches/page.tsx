@@ -29,7 +29,7 @@ function MatchRow({
   const time = matchDate.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" });
 
   return (
-    <div className={`px-2 sm:px-3 py-2 sm:py-2.5 transition-colors border-b border-slate-100 last:border-b-0 hover:bg-slate-50/60 ${isFinished ? "" : ""}`}>
+    <div data-match-id={match.id} className={`px-2 sm:px-3 py-2 sm:py-2.5 transition-colors border-b border-slate-100 last:border-b-0 hover:bg-slate-50/60 ${isFinished ? "" : ""}`}>
       <div className="flex items-center gap-1 sm:gap-2">
         <div className="w-12 sm:w-14 flex-shrink-0 text-center">
           <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase leading-tight">{day}</div>
@@ -109,6 +109,7 @@ export default function MatchesPage() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [activeRound, setActiveRound] = useState(0);
+  const [initialScrollDone, setInitialScrollDone] = useState(false);
 
   const loadData = async (userId: string) => {
     const supabase = getSupabaseClient();
@@ -130,6 +131,38 @@ export default function MatchesPage() {
       loadData(session.user.id);
     });
   }, []);
+
+  useEffect(() => {
+    if (initialScrollDone || matches.length === 0) return;
+
+    const byRoundLocal = new Map<number, Match[]>();
+    for (const match of matches) {
+      const r = match.round ?? 1;
+      if (!byRoundLocal.has(r)) byRoundLocal.set(r, []);
+      byRoundLocal.get(r)!.push(match);
+    }
+    const sortedLocal = [...byRoundLocal.entries()].sort(([a], [b]) => a - b);
+    const now = new Date();
+    const nearest = sortedLocal.find(([, ms]) =>
+      ms.some(m => new Date(m.match_date) > now)
+    );
+    const round = activeRound || nearest?.[0] || (sortedLocal.length > 0 ? sortedLocal[sortedLocal.length - 1][0] : null);
+    if (!round) return;
+
+    const roundMatches = byRoundLocal.get(round) || [];
+    const firstUpcoming = roundMatches.find(m => !m.finished);
+    if (!firstUpcoming) return;
+
+    const timer = setTimeout(() => {
+      const el = document.querySelector(`[data-match-id="${firstUpcoming.id}"]`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        setInitialScrollDone(true);
+      }
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, [matches, activeRound, initialScrollDone]);
 
   if (!user) return null;
 

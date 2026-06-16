@@ -105,8 +105,12 @@ export default function TabelaPage() {
       pts >= 3 ? "text-emerald-600" :
       pts >= 1 ? "text-amber-600" :
       "text-red-400";
+    const bgClass =
+      pts >= 3 ? "bg-emerald-50/50" :
+      pts >= 1 ? "bg-amber-50/50" :
+      "bg-red-50/50";
     return (
-      <td key={`${u.id}_${match.id}`} className={cellClass}>
+      <td key={`${u.id}_${match.id}`} className={`${cellClass} ${bgClass}`}>
         <span className={`text-[11px] font-semibold tabular-nums ${colorClass}`}>
           {pred.predicted_home}:{pred.predicted_away}
         </span>

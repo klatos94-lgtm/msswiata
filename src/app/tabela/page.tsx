@@ -151,7 +151,7 @@ export default function TabelaPage() {
         </div>
       ) : (
         <div className="bg-white rounded-none sm:rounded-2xl border border-slate-200 shadow-sm -mx-4 sm:-mx-0">
-          <div className="overflow-auto" style={{ maxHeight: "calc(100vh - 260px)" }}>
+          <div className="overflow-auto" style={{ maxHeight: "calc(100vh - 140px)" }}>
             <table className="w-full text-left text-xs">
               <thead className="sticky top-0 z-20">
                 <tr className="bg-slate-50">

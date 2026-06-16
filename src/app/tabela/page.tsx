@@ -73,7 +73,7 @@ export default function TabelaPage() {
   function renderCell(match: Match, u: UserRow) {
     const key = `${u.id}_${match.id}`;
     const pred = predictionMap.get(key);
-    const isCurrentUser = u.id === user.id;
+    const isCurrentUser = u.id === user!.id;
     const status = getMatchStatus(match);
 
     let cellClass = "px-1 sm:px-1.5 py-1 text-center";

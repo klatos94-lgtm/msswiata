@@ -151,11 +151,11 @@ export default function TabelaPage() {
         </div>
       ) : (
         <div className="bg-white rounded-none sm:rounded-2xl border border-slate-200 shadow-sm -mx-4 sm:-mx-0">
-          <div className="overflow-x-auto" style={{ overflowY: "clip" }}>
+          <div className="overflow-auto" style={{ maxHeight: "calc(100vh - 260px)" }}>
             <table className="w-full text-left text-xs">
-              <thead>
+              <thead className="sticky top-0 z-20">
                 <tr className="bg-slate-50">
-                  <th className="sticky left-0 top-0 bg-slate-50 z-30 px-2 sm:px-3 py-2 text-slate-500 font-semibold uppercase tracking-wider text-[10px] w-[100px] sm:w-[220px] shadow-[2px_0_4px_-2px_rgba(0,0,0,0.08)]">
+                  <th className="sticky left-0 bg-slate-50 z-30 px-2 sm:px-3 py-2 text-slate-500 font-semibold uppercase tracking-wider text-[10px] w-[100px] sm:w-[220px] shadow-[2px_0_4px_-2px_rgba(0,0,0,0.08)]">
                     Data / Mecz
                   </th>
                   {users.map((u) => (

@@ -70,14 +70,15 @@ export default function TabelaPage() {
 
   if (!user) return null;
 
-  function renderCell(match: Match, u: UserRow) {
+  function renderCell(match: Match, u: UserRow, isLastRow: boolean) {
     const key = `${u.id}_${match.id}`;
     const pred = predictionMap.get(key);
     const isCurrentUser = u.id === user!.id;
     const status = getMatchStatus(match);
 
     let cellClass = "px-1 sm:px-1.5 py-1 text-center";
-    if (isCurrentUser) cellClass += " ring-2 ring-emerald-400 ring-inset";
+    if (isCurrentUser) cellClass += " border-l-2 border-r-2 border-emerald-300";
+    if (isCurrentUser && isLastRow) cellClass += " border-b-2";
     const textWeight = isCurrentUser ? "font-extrabold" : "font-semibold";
 
     if (!pred || pred.predicted_home === null) {
@@ -165,7 +166,7 @@ export default function TabelaPage() {
                       style={{ width: users.length > 10 ? 44 : 52 }}
                       className={`sticky top-0 z-20 px-1 py-2 text-center sm:w-[72px] ${
                         u.id === user.id
-                          ? "bg-slate-50 text-emerald-700 font-extrabold ring-2 ring-emerald-400 ring-inset"
+                          ? "bg-slate-50 text-emerald-700 font-extrabold border-t-2 border-l-2 border-r-2 border-emerald-300"
                           : "bg-slate-50 text-slate-500 font-medium"
                       }`}
                     >
@@ -177,7 +178,8 @@ export default function TabelaPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {matches.map((match) => {
+                {matches.map((match, matchIdx) => {
+                  const isLastRow = matchIdx === matches.length - 1;
                   const d = new Date(match.match_date);
                   const day = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.`;
                   const time = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
@@ -214,7 +216,7 @@ export default function TabelaPage() {
                           </div>
                         </div>
                       </td>
-                      {users.map((u) => renderCell(match, u))}
+                      {users.map((u) => renderCell(match, u, isLastRow))}
                     </tr>
                   );
                 })}

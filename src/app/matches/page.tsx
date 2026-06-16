@@ -133,6 +133,12 @@ export default function MatchesPage() {
   }, []);
 
   useEffect(() => {
+    if (!user) return;
+    const interval = setInterval(() => loadData(user.id), 300000);
+    return () => clearInterval(interval);
+  }, [user]);
+
+  useEffect(() => {
     if (initialScrollDone || matches.length === 0) return;
 
     const byRoundLocal = new Map<number, Match[]>();

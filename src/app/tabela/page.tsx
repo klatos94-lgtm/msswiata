@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { Suspense, useEffect, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getSupabaseClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
@@ -29,6 +29,14 @@ const statusConfig: Record<MatchStatus, { dot: string; label: string; rowBg: str
 };
 
 export default function TabelaPage() {
+  return (
+    <Suspense fallback={<div className="animate-pulse bg-slate-100 rounded-2xl h-96" />}>
+      <TabelaContent />
+    </Suspense>
+  );
+}
+
+function TabelaContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [user, setUser] = useState<User | null>(null);

@@ -289,8 +289,13 @@ function MatchAdminCard({
       </div>
 
       <div className="flex items-center justify-between mt-2 text-xs text-slate-500">
-        <span>
+        <span className="flex items-center gap-2">
           {new Date(match.match_date).toLocaleDateString("pl-PL")}
+          {match.bracket_order && (
+            <span className="bg-amber-100 text-amber-700 font-bold px-1.5 py-0.5 rounded text-[9px]">
+              M{match.bracket_order}
+            </span>
+          )}
         </span>
         {match.finished ? (
           <div className="flex items-center gap-2">

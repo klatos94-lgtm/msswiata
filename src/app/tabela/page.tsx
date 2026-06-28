@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getSupabaseClient } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
 import type { Match } from "@/types/match";
 import type { Prediction } from "@/types/prediction";
 import Flag from "@/components/Flag";
+import BracketView from "@/components/BracketView";
 
 interface UserRow {
   id: string;
@@ -29,22 +30,38 @@ const statusConfig: Record<MatchStatus, { dot: string; label: string; rowBg: str
 
 export default function TabelaPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [user, setUser] = useState<User | null>(null);
   const [matches, setMatches] = useState<Match[]>([]);
+  const [bracketMatches, setBracketMatches] = useState<Match[]>([]);
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadData = async () => {
+  const view = searchParams.get("view") === "bracket" ? "bracket" : "table";
+
+  const setView = (v: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("view", v);
+    router.push(`/tabela?${params.toString()}`);
+  };
+
+  const loadData = useCallback(async () => {
     const supabase = getSupabaseClient();
-    const { data } = await supabase.rpc("get_cartesian_table");
-    if (data) {
-      if (Array.isArray(data.users)) setUsers(data.users);
-      if (Array.isArray(data.matches)) setMatches(data.matches);
-      if (Array.isArray(data.predictions)) setPredictions(data.predictions);
+    const [cartesianRes, bracketRes] = await Promise.all([
+      supabase.rpc("get_cartesian_table"),
+      supabase.from("matches").select("*").not("bracket_order", "is", null).order("bracket_order", { ascending: true }),
+    ]);
+    if (cartesianRes.data) {
+      if (Array.isArray(cartesianRes.data.users)) setUsers(cartesianRes.data.users);
+      if (Array.isArray(cartesianRes.data.matches)) setMatches(cartesianRes.data.matches);
+      if (Array.isArray(cartesianRes.data.predictions)) setPredictions(cartesianRes.data.predictions);
+    }
+    if (bracketRes.data) {
+      setBracketMatches(bracketRes.data as Match[]);
     }
     setLoading(false);
-  };
+  }, []);
 
   useEffect(() => {
     const supabase = getSupabaseClient();
@@ -56,7 +73,7 @@ export default function TabelaPage() {
       setUser(data.user);
       loadData();
     });
-  }, []);
+  }, [loadData]);
 
   const predictionMap = new Map<string, Prediction>();
   for (const p of predictions) {
@@ -127,18 +144,44 @@ export default function TabelaPage() {
       <div className="bg-gradient-to-br from-slate-900 to-[#001e28] rounded-2xl shadow-lg px-5 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center ring-1 ring-emerald-500/20">
-              <span className="text-lg">📊</span>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ring-1 ${view === 'bracket' ? 'bg-amber-500/15 ring-amber-500/20' : 'bg-emerald-500/15 ring-emerald-500/20'}`}>
+              <span className="text-lg">{view === 'bracket' ? '🏆' : '📊'}</span>
             </div>
             <div>
-              <h1 className="text-white font-bold text-base leading-tight">Tabela Kartezjańska</h1>
-              <p className="text-emerald-400/80 text-[11px] font-medium">{users.length} graczy &middot; {matches.length} meczów</p>
+              <h1 className="text-white font-bold text-base leading-tight">{view === 'bracket' ? 'Drabinka' : 'Tabela Kartezjańska'}</h1>
+              <p className="text-emerald-400/80 text-[11px] font-medium">{view === 'bracket' ? 'Faza pucharowa' : `${users.length} graczy &middot; ${matches.length} meczów`}</p>
             </div>
           </div>
-          <div className="hidden sm:flex items-center gap-3 text-[10px] text-slate-400">
-            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Koniec</span>
-            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Live</span>
-            <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-slate-400" /> Nadchodzi</span>
+          <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2 text-[10px] text-slate-400 mr-3">
+              {view === 'table' && (
+                <>
+                  <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Koniec</span>
+                  <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Live</span>
+                  <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-slate-400" /> Nadchodzi</span>
+                </>
+              )}
+            </div>
+            <button
+              onClick={() => setView('table')}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                view === 'table'
+                  ? 'bg-emerald-500 text-white shadow-sm'
+                  : 'bg-white/10 text-slate-300 hover:bg-white/20'
+              }`}
+            >
+              Tabela
+            </button>
+            <button
+              onClick={() => setView('bracket')}
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                view === 'bracket'
+                  ? 'bg-amber-500 text-white shadow-sm'
+                  : 'bg-white/10 text-slate-300 hover:bg-white/20'
+              }`}
+            >
+              Drabinka
+            </button>
           </div>
         </div>
       </div>
@@ -150,6 +193,10 @@ export default function TabelaPage() {
               <div key={i} className="h-6 bg-slate-100 rounded-lg animate-pulse" style={{ width: `${70 + Math.random() * 30}%` }} />
             ))}
           </div>
+        </div>
+      ) : view === "bracket" ? (
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4">
+          <BracketView matches={bracketMatches} />
         </div>
       ) : (
         <div className="bg-white rounded-none sm:rounded-2xl border border-slate-200 shadow-sm -mx-4 sm:-mx-0">

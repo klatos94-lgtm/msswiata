@@ -524,6 +524,17 @@ BEGIN
 END;
 $$;
 
+-- --- get_server_time: zwraca aktualny czas serwera (dla synchronizacji klienta) ---
+CREATE OR REPLACE FUNCTION public.get_server_time()
+RETURNS TIMESTAMPTZ
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT NOW();
+$$;
+
 -- ============================================================
 -- 4. SEED: wgraj mecze z JSON (uruchom osobno po dodaniu danych)
 -- ============================================================

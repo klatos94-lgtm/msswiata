@@ -2,209 +2,182 @@
 
 import type { Match } from "@/types/match";
 import Flag from "@/components/Flag";
-import { roundLabels, getBracketRound } from "@/lib/bracket";
+import { useServerTime } from "@/lib/server-time";
 
-interface BracketViewProps {
+interface Props {
   matches: Match[];
 }
 
-function getMatchByOrder(matches: Match[], order: number): Match | undefined {
+function getMatch(matches: Match[], order: number): Match | undefined {
   return matches.find((m) => m.bracket_order === order);
 }
 
-function MatchCard({ match }: { match?: Match }) {
-  if (!match) {
-    return (
-      <div className="bg-white rounded-lg border border-dashed border-slate-200 p-1.5 text-center text-[9px] text-slate-300 min-w-[100px]">
-        ?
-      </div>
-    );
-  }
+function teamDisplay(team: string): string {
+  return team || "?";
+}
 
-  const home = match.home_team;
-  const away = match.away_team;
-  const hasResult = match.finished && match.home_score != null;
-  const isPlaceholder = !home || !away;
-  const isLive = !match.finished && new Date(match.match_date) <= new Date();
-
-  const date = new Date(match.match_date);
-  const day = `${String(date.getDate()).padStart(2, "0")}.${String(date.getMonth() + 1).padStart(2, "0")}`;
-  const time = `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
-
+function TeamLine({ team, score, winner }: { team: string; score: number | null; winner?: boolean }) {
   return (
-    <div
-      className={`
-        bg-white rounded-lg border p-1.5 min-w-[110px] max-w-[130px]
-        transition-all duration-200
-        ${hasResult ? "border-emerald-300 shadow-sm" : ""}
-        ${isLive ? "border-amber-300 shadow-sm ring-1 ring-amber-200" : ""}
-        ${isPlaceholder ? "border-dashed border-slate-200" : "border-slate-200"}
-      `}
-    >
-      {isPlaceholder ? (
-        <div className="text-[9px] text-slate-300 text-center py-2">
-          <span className="text-xs">?</span>
-          <div className="text-[7px] text-slate-200 mt-0.5">{day} {time}</div>
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center justify-between gap-0.5">
-            <span className="text-[9px] font-semibold text-slate-800 truncate max-w-[50px] leading-tight">
-              {home}
-            </span>
-            <Flag team={home} />
-          </div>
-          {hasResult ? (
-            <div className="text-center font-bold text-[13px] text-slate-900 my-0.5 tabular-nums">
-              {match.home_score}:{match.away_score}
-            </div>
-          ) : (
-            <div className="text-center text-[10px] text-slate-300 font-medium my-0.5">vs</div>
-          )}
-          <div className="flex items-center justify-between gap-0.5">
-            <span className="text-[9px] font-semibold text-slate-800 truncate max-w-[50px] leading-tight">
-              {away}
-            </span>
-            <Flag team={away} />
-          </div>
-          <div className="text-[7px] text-slate-400 text-center mt-0.5 font-medium">
-            {day} {time}
-          </div>
-        </>
+    <div className={`flex items-center justify-between gap-1 px-2 py-0.5 ${winner ? "bg-emerald-50" : ""}`}>
+      <div className="flex items-center gap-1 min-w-0">
+        <Flag team={team} />
+        <span className="text-[10px] font-semibold text-slate-800 truncate max-w-[60px] leading-tight">
+          {teamDisplay(team)}
+        </span>
+      </div>
+      {score != null && (
+        <span className={`text-[11px] font-bold tabular-nums ${winner ? "text-emerald-700" : "text-slate-400"}`}>
+          {score}
+        </span>
       )}
     </div>
   );
 }
 
-export default function BracketView({ matches }: BracketViewProps) {
-  const bracketMatches = matches.filter((m) => m.bracket_order != null && m.bracket_order >= 1 && m.bracket_order <= 32);
+function MatchBox({ match }: { match?: Match }) {
+  const { now } = useServerTime();
+  const hasTeams = match?.home_team || match?.away_team;
 
-  function renderColumn(round: number) {
-    const label = roundLabels[round];
-    let orders: number[] = [];
-    switch (round) {
-      case 4: orders = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]; break;
-      case 5: orders = [17, 18, 19, 20, 21, 22, 23, 24]; break;
-      case 6: orders = [25, 26, 27, 28]; break;
-      case 7: orders = [29, 30]; break;
-      case 8: orders = [31, 32]; break;
-    }
-
+  if (!match) {
+    return <div className="bg-white rounded border border-dashed border-slate-200 w-[130px] h-[38px] flex items-center justify-center text-[9px] text-slate-300">?</div>;
+  }
+  if (!hasTeams) {
     return (
-      <div key={round} className="flex flex-col gap-1">
-        <div className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1 text-center sticky left-0">
-          {label?.short}
-        </div>
-        {round === 4 && (
-          <>
-            <div className="flex flex-col gap-1">
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((o) => (
-                <div key={o} className="flex items-center gap-0.5">
-                  <MatchCard match={getMatchByOrder(matches, o)} />
-                  <div className="w-3 h-px bg-slate-200" />
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-col gap-1 mt-1">
-              {[9, 10, 11, 12, 13, 14, 15, 16].map((o) => (
-                <div key={o} className="flex items-center gap-0.5">
-                  <MatchCard match={getMatchByOrder(matches, o)} />
-                  <div className="w-3 h-px bg-slate-200" />
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-        {round === 5 && (
-          <div className="flex flex-col gap-1">
-            {orders.map((o) => (
-              <div key={o} className="flex items-center gap-0.5">
-                <MatchCard match={getMatchByOrder(matches, o)} />
-                <div className="w-3 h-px bg-slate-200" />
-              </div>
-            ))}
-          </div>
-        )}
-        {round === 6 && (
-          <div className="flex flex-col gap-1">
-            {orders.map((o) => (
-              <div key={o} className="flex items-center gap-0.5">
-                <MatchCard match={getMatchByOrder(matches, o)} />
-                <div className="w-3 h-px bg-slate-200" />
-              </div>
-            ))}
-          </div>
-        )}
-        {round === 7 && (
-          <div className="flex flex-col gap-1">
-            {orders.map((o) => (
-              <div key={o} className="flex items-center gap-0.5">
-                <MatchCard match={getMatchByOrder(matches, o)} />
-                <div className="w-3 h-px bg-slate-200" />
-              </div>
-            ))}
-          </div>
-        )}
-        {round === 8 && (
-          <div className="flex flex-col gap-1">
-            <div className="border-b border-slate-100 pb-1 mb-1">
-              <div className="text-[7px] text-slate-400 font-medium text-center mb-0.5">3. miejsce</div>
-              <MatchCard match={getMatchByOrder(matches, 31)} />
-            </div>
-            <div>
-              <div className="text-[7px] text-amber-600 font-bold text-center mb-0.5 uppercase">Finał</div>
-              <MatchCard match={getMatchByOrder(matches, 32)} />
-            </div>
-          </div>
-        )}
+      <div className="bg-white rounded border border-dashed border-slate-200 w-[130px] h-[38px] flex items-center justify-center text-[9px] text-slate-300">
+        {new Date(match.match_date).toLocaleDateString("pl-PL", { day: "2-digit", month: "2-digit" })}{" "}
+        {new Date(match.match_date).toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" })}
       </div>
     );
   }
 
+  const homeWin = match.finished && match.home_score != null && match.home_score > (match.away_score ?? 0);
+  const awayWin = match.finished && match.away_score != null && match.away_score > (match.home_score ?? 0);
+  const isLive = !match.finished && new Date(match.match_date) <= now;
+
+  return (
+    <div
+      className={`
+        bg-white rounded border w-[130px] divide-y divide-slate-100
+        ${match.finished ? "border-emerald-300" : isLive ? "border-amber-300 ring-1 ring-amber-200" : "border-slate-200"}
+      `}
+    >
+      <TeamLine team={match.home_team} score={match.home_score} winner={homeWin} />
+      <TeamLine team={match.away_team} score={match.away_score} winner={awayWin} />
+    </div>
+  );
+}
+
+function BracketPair({
+  matches,
+  top,
+  bottom,
+  target,
+}: {
+  matches: Match[];
+  top: number;
+  bottom: number;
+  target: number;
+}) {
+  return (
+    <div className="flex items-center">
+      <div className="flex flex-col gap-0">
+        <div className="flex items-center">
+          <MatchBox match={getMatch(matches, top)} />
+          <div className="w-2.5 h-px bg-slate-300" />
+        </div>
+        <div className="flex items-center">
+          <MatchBox match={getMatch(matches, bottom)} />
+          <div className="w-2.5 h-px bg-slate-300" />
+        </div>
+      </div>
+      <div className="flex flex-col items-center mx-0">
+        <div className="w-px h-[19px] bg-slate-300" />
+        <div className="w-3 h-px bg-slate-300" />
+        <div className="w-px h-[19px] bg-slate-300" />
+      </div>
+      <div className="flex items-center">
+        <div className="w-2.5 h-px bg-slate-300" />
+        <MatchBox match={getMatch(matches, target)} />
+      </div>
+    </div>
+  );
+}
+
+function ConnectorLine({ height }: { height: number }) {
+  return (
+    <div className="flex flex-col items-center" style={{ height }}>
+      <div className="w-px flex-1 bg-slate-300" />
+    </div>
+  );
+}
+
+function ConnectorSplit() {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="w-px h-[19px] bg-slate-300" />
+      <div className="w-3 h-px bg-slate-300" />
+      <div className="w-px h-[19px] bg-slate-300" />
+    </div>
+  );
+}
+
+export default function BracketView({ matches }: Props) {
+  const topHalfPairs = [
+    { top: 1, bottom: 4, target: 17 },
+    { top: 3, bottom: 6, target: 18 },
+    { top: 2, bottom: 5, target: 19 },
+    { top: 7, bottom: 8, target: 20 },
+  ];
+
+  const bottomHalfPairs = [
+    { top: 12, bottom: 11, target: 21 },
+    { top: 10, bottom: 9, target: 22 },
+    { top: 15, bottom: 14, target: 23 },
+    { top: 13, bottom: 16, target: 24 },
+  ];
+
+  const qfPairs = [
+    { top: 17, bottom: 18, target: 25 },
+    { top: 21, bottom: 22, target: 26 },
+    { top: 19, bottom: 20, target: 27 },
+    { top: 23, bottom: 24, target: 28 },
+  ];
+
+  const sfPairs = [
+    { top: 25, bottom: 26, target: 29 },
+    { top: 27, bottom: 28, target: 30 },
+  ];
+
   return (
     <div className="overflow-x-auto pb-4">
-      <div className="flex gap-3 min-w-[700px]">
-        {renderColumn(4)}
-        <div className="flex flex-col justify-center gap-1">
-          {[
-            [17, 18],
-            [19, 20],
-            [21, 22],
-            [23, 24],
-          ].map((_, i) => (
-            <div key={i} className="h-[52px] flex items-center">
-              <div className="w-3 h-px bg-slate-200" />
-            </div>
+      <div className="flex gap-0 min-w-[850px]">
+        {/* Round 4 (1/16) + connectors → Round 5 (1/8) */}
+        <div className="flex flex-col gap-3">
+          <div className="text-[8px] font-bold text-slate-400 uppercase tracking-wider text-center mb-1">1/16</div>
+          {topHalfPairs.map((p, i) => (
+            <BracketPair key={`t${i}`} matches={matches} top={p.top} bottom={p.bottom} target={p.target} />
+          ))}
+          <div className="h-0" />
+          {bottomHalfPairs.map((p, i) => (
+            <BracketPair key={`b${i}`} matches={matches} top={p.top} bottom={p.bottom} target={p.target} />
           ))}
         </div>
-        {renderColumn(5)}
-        <div className="flex flex-col justify-center gap-1">
-          {[
-            [25, 26],
-            [27, 28],
-          ].map((_, i) => (
-            <div key={i} className="h-[52px] flex items-center">
-              <div className="w-3 h-px bg-slate-200" />
-            </div>
-          ))}
-        </div>
-        {renderColumn(6)}
-        <div className="flex flex-col justify-center gap-1">
-          {[
-            [29, 30],
-          ].map((_, i) => (
-            <div key={i} className="h-[52px] flex items-center">
-              <div className="w-3 h-px bg-slate-200" />
-            </div>
-          ))}
-        </div>
-        {renderColumn(7)}
-        <div className="flex flex-col justify-center gap-1">
-          <div className="h-[52px] flex items-center">
-            <div className="w-3 h-px bg-slate-200" />
+
+        {/* Round 5 (1/8) + connectors → Round 6 (QF) */}
+        <div className="flex flex-col justify-center gap-3 ml-4">
+          <div className="text-[8px] font-bold text-slate-400 uppercase tracking-wider text-center mb-1">1/8</div>
+          <div className="flex flex-col gap-0">
+            {[17, 18, 19, 20, 21, 22, 23, 24].map((o, i) => (
+              <div key={o} className="flex items-center">
+                {i % 2 === 0 && <div className="w-2.5 h-px bg-slate-300" />}
+                {i % 2 === 0 && <ConnectorSplit />}
+                <div className={i % 2 === 0 ? "" : "ml-[45px]"}>
+                  <MatchBox match={getMatch(matches, o)} />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-        {renderColumn(8)}
       </div>
     </div>
   );

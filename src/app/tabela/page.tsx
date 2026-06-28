@@ -8,6 +8,7 @@ import type { Match } from "@/types/match";
 import type { Prediction } from "@/types/prediction";
 import Flag from "@/components/Flag";
 import BracketView from "@/components/BracketView";
+import { useServerTime } from "@/lib/server-time";
 
 interface UserRow {
   id: string;
@@ -16,9 +17,9 @@ interface UserRow {
 
 type MatchStatus = "future" | "live" | "finished";
 
-function getMatchStatus(match: Match): MatchStatus {
+function getMatchStatus(match: Match, now: Date): MatchStatus {
   if (match.finished) return "finished";
-  if (new Date(match.match_date) <= new Date()) return "live";
+  if (new Date(match.match_date) <= now) return "live";
   return "future";
 }
 
@@ -71,6 +72,8 @@ function TabelaContent() {
     setLoading(false);
   }, []);
 
+  const { now } = useServerTime();
+
   useEffect(() => {
     const supabase = getSupabaseClient();
     supabase.auth.getUser().then(({ data }) => {
@@ -99,7 +102,7 @@ function TabelaContent() {
     const key = `${u.id}_${match.id}`;
     const pred = predictionMap.get(key);
     const isCurrentUser = u.id === user!.id;
-    const status = getMatchStatus(match);
+                  const status = getMatchStatus(match, now);
 
     let cellClass = "px-1 sm:px-1.5 py-1 text-center";
     if (isCurrentUser) cellClass += " border-l-2 border-r-2 border-emerald-300";
@@ -238,9 +241,9 @@ function TabelaContent() {
                   const d = new Date(match.match_date);
                   const day = `${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}.`;
                   const time = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-                  const status = getMatchStatus(match);
+    const status = getMatchStatus(match, now);
                   const cfg = statusConfig[status];
-                  const isPast24h = status === "live" || (status === "finished" && (Date.now() - d.getTime()) < 86400000);
+                  const isPast24h = status === "live" || (status === "finished" && (now.getTime() - d.getTime()) < 86400000);
 
                   return (
                     <tr key={match.id} className={`transition-colors ${cfg.rowBg} ${isPast24h ? "hover:bg-slate-50" : "hover:bg-slate-50/60"}`}>

@@ -8,20 +8,22 @@ import type { Match } from "@/types/match";
 import type { Prediction } from "@/types/prediction";
 import PredictionForm from "@/components/PredictionForm";
 import Flag from "@/components/Flag";
+import { useServerTime } from "@/lib/server-time";
 
 function MatchRow({
   match,
   pred,
   userId,
+  now,
   onSave,
 }: {
   match: Match;
   pred: Prediction | null;
   userId: string;
+  now: Date;
   onSave?: () => void;
 }) {
   const matchDate = new Date(match.match_date);
-  const now = new Date();
   const isPast = matchDate < now;
   const isFinished = match.finished;
 
@@ -111,6 +113,8 @@ export default function MatchesPage() {
   const [activeRound, setActiveRound] = useState(0);
   const [initialScrollDone, setInitialScrollDone] = useState(false);
 
+  const { now } = useServerTime();
+
   const loadData = async (userId: string) => {
     const supabase = getSupabaseClient();
     const { data } = await supabase.rpc("get_matches_with_predictions", { p_user_id: userId });
@@ -148,7 +152,6 @@ export default function MatchesPage() {
       byRoundLocal.get(r)!.push(match);
     }
     const sortedLocal = [...byRoundLocal.entries()].sort(([a], [b]) => a - b);
-    const now = new Date();
     const nearest = sortedLocal.find(([, ms]) =>
       ms.some(m => new Date(m.match_date) > now)
     );
@@ -184,7 +187,6 @@ export default function MatchesPage() {
 
   const nearestRound = (() => {
     if (matches.length === 0) return 1;
-    const now = new Date();
     const nearest = sortedRounds.find(([, ms]) =>
       ms.some(m => new Date(m.match_date) > now)
     );
@@ -252,6 +254,7 @@ Typy
                     match={match}
                     pred={pred}
                     userId={user.id}
+                    now={now}
                     onSave={() => loadData(user.id)}
                   />
                 );

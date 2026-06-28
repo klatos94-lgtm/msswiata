@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { getSupabaseClient } from "@/lib/supabase";
+import { useServerTime, getServerNow } from "@/lib/server-time";
 
 interface PredictionFormProps {
   matchId: string;
@@ -23,12 +24,13 @@ export default function PredictionForm({
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
-  const started = new Date() >= new Date(matchDate);
+  const { now } = useServerTime();
+  const started = now >= new Date(matchDate);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (new Date() >= new Date(matchDate)) {
+    if (getServerNow() >= new Date(matchDate)) {
       setMessage("Mecz już się rozpoczął — nie można zmienić typu");
       setSaving(false);
       return;

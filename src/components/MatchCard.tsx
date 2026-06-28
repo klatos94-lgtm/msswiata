@@ -3,6 +3,7 @@
 import type { Match } from "@/types/match";
 import PredictionForm from "./PredictionForm";
 import Flag from "@/components/Flag";
+import { useServerTime } from "@/lib/server-time";
 
 interface MatchCardProps {
   match: Match;
@@ -11,8 +12,10 @@ interface MatchCardProps {
 }
 
 export default function MatchCard({ match, userPrediction, userId }: MatchCardProps) {
+  const { now } = useServerTime();
+
   const matchDate = new Date(match.match_date);
-  const isPast = matchDate < new Date();
+  const isPast = matchDate < now;
   const isFinished = match.finished;
 
   const statusBadge = isFinished

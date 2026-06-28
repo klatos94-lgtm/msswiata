@@ -8,6 +8,7 @@ import type { Match } from "@/types/match";
 import type { Prediction } from "@/types/prediction";
 import PredictionForm from "@/components/PredictionForm";
 import Flag from "@/components/Flag";
+import { useServerTime } from "@/lib/server-time";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -19,6 +20,8 @@ export default function DashboardPage() {
   const [totalPoints, setTotalPoints] = useState(0);
   const [correctResults, setCorrectResults] = useState(0);
   const [exactScores, setExactScores] = useState(0);
+
+  const { now } = useServerTime();
 
   const loadData = async (userId: string) => {
     const supabase = getSupabaseClient();
@@ -105,7 +108,6 @@ export default function DashboardPage() {
                 {matches.map((match) => {
                   const pred = userPredictions.find((p) => p.match_id === match.id) || null;
                   const matchDate = new Date(match.match_date);
-                  const now = new Date();
                   const locked = matchDate <= now;
                   const finished = match.finished;
 

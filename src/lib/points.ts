@@ -2,12 +2,10 @@ export function calculatePoints(
   predictedHome: number,
   predictedAway: number,
   actualHome: number,
-  actualAway: number,
-  stage: number = 1
+  actualAway: number
 ): number {
-  const mult = stage || 1;
   const exact = predictedHome === actualHome && predictedAway === actualAway;
-  if (exact) return 3 * mult;
+  if (exact) return 3;
 
   const predictedDiff = predictedHome - predictedAway;
   const actualDiff = actualHome - actualAway;
@@ -17,7 +15,7 @@ export function calculatePoints(
     (predictedDiff < 0 && actualDiff < 0) ||
     (predictedDiff === 0 && actualDiff === 0);
 
-  if (sameWinner) return 1 * mult;
+  if (sameWinner) return 1;
 
   return 0;
 }

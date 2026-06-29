@@ -249,15 +249,10 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 DECLARE
-  v_stage INT;
-  v_mult INT;
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM public.admins WHERE user_id = auth.uid()) THEN
     RAISE EXCEPTION 'Not authorized';
   END IF;
-
-  SELECT stage INTO v_stage FROM public.matches WHERE id = p_match_id;
-  v_mult := CASE WHEN v_stage >= 2 THEN 2 ELSE 1 END;
 
   UPDATE public.matches
   SET home_score = p_home_score,
@@ -269,11 +264,11 @@ BEGIN
   SET points = (
     CASE
       WHEN predicted_home = p_home_score AND predicted_away = p_away_score
-        THEN 3 * v_mult
+        THEN 3
       WHEN (predicted_home - predicted_away > 0 AND p_home_score - p_away_score > 0)
         OR (predicted_home - predicted_away < 0 AND p_home_score - p_away_score < 0)
         OR (predicted_home - predicted_away = 0 AND p_home_score - p_away_score = 0)
-        THEN 1 * v_mult
+        THEN 1
       ELSE 0
     END
   )
@@ -292,16 +287,10 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
 AS $$
-DECLARE
-  v_stage INT;
-  v_mult INT;
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM public.admins WHERE user_id = auth.uid()) THEN
     RAISE EXCEPTION 'Not authorized';
   END IF;
-
-  SELECT stage INTO v_stage FROM public.matches WHERE id = p_match_id;
-  v_mult := CASE WHEN v_stage >= 2 THEN 2 ELSE 1 END;
 
   UPDATE public.matches
   SET home_score = p_home_score,
@@ -312,11 +301,11 @@ BEGIN
   SET points = (
     CASE
       WHEN predicted_home = p_home_score AND predicted_away = p_away_score
-        THEN 3 * v_mult
+        THEN 3
       WHEN (predicted_home - predicted_away > 0 AND p_home_score - p_away_score > 0)
         OR (predicted_home - predicted_away < 0 AND p_home_score - p_away_score < 0)
         OR (predicted_home - predicted_away = 0 AND p_home_score - p_away_score = 0)
-        THEN 1 * v_mult
+        THEN 1
       ELSE 0
     END
   )

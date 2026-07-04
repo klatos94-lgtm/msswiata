@@ -24,7 +24,7 @@ export default function RegulaminPage() {
                 <li><strong>1 pkt</strong> za poprawny rezultat</li>
               </ul>
             </li>
-            <li>Decydujące mecze / półfinały i finał:
+            <li>Mecze od <strong>14 lipca 2026</strong> (półfinały i finały) — podwójna punktacja:
               <ul className="list-disc list-inside ml-5 mt-1 text-slate-500 space-y-0.5">
                 <li><strong>6 pkt</strong> za poprawny wynik</li>
                 <li><strong>2 pkt</strong> za poprawny rezultat</li>

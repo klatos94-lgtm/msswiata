@@ -9,5 +9,6 @@ export interface Match {
   away_score: number | null;
   finished: boolean;
   bracket_order: number | null;
+  winner?: string | null;
   created_at?: string;
 }

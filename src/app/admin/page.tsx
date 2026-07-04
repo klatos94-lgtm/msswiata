@@ -89,7 +89,8 @@ export default function AdminPage() {
   const handleScoreUpdate = async (
     matchId: string,
     homeScore: number,
-    awayScore: number
+    awayScore: number,
+    winner?: string
   ) => {
     setFinishingId(matchId);
     const supabase = getSupabaseClient();
@@ -107,7 +108,12 @@ export default function AdminPage() {
     await fetch(`${supabaseUrl}/rest/v1/rpc/calculate_match_points`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ p_match_id: matchId, p_home_score: homeScore, p_away_score: awayScore }),
+      body: JSON.stringify({
+        p_match_id: matchId,
+        p_home_score: homeScore,
+        p_away_score: awayScore,
+        ...(winner ? { p_winner: winner } : {}),
+      }),
     });
 
     setFinishingId(null);
@@ -117,7 +123,8 @@ export default function AdminPage() {
   const handleRecalculate = async (
     matchId: string,
     homeScore: number,
-    awayScore: number
+    awayScore: number,
+    winner?: string
   ) => {
     setRecalculatingId(matchId);
     const supabase = getSupabaseClient();
@@ -135,7 +142,12 @@ export default function AdminPage() {
     await fetch(`${supabaseUrl}/rest/v1/rpc/recalculate_match_points`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ p_match_id: matchId, p_home_score: homeScore, p_away_score: awayScore }),
+      body: JSON.stringify({
+        p_match_id: matchId,
+        p_home_score: homeScore,
+        p_away_score: awayScore,
+        ...(winner ? { p_winner: winner } : {}),
+      }),
     });
 
     setRecalculatingId(null);
@@ -200,8 +212,8 @@ export default function AdminPage() {
             onChange={(e) => setMatchStage(parseInt(e.target.value))}
             className="bg-slate-50 text-slate-800 rounded-lg px-3 py-2 border border-slate-300 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none transition text-sm"
           >
-            <option value={1}>Stage 1 — grupowy (×1)</option>
-            <option value={2}>Stage 2 — pucharowy (×2)</option>
+            <option value={1}>Stage 1 — grupowy</option>
+            <option value={2}>Stage 2 — pucharowy</option>
           </select>
           <button
             type="submit"
@@ -236,8 +248,8 @@ function MatchAdminCard({
   recalculating,
 }: {
   match: Match;
-  onFinish: (id: string, home: number, away: number) => void;
-  onRecalculate: (id: string, home: number, away: number) => void;
+  onFinish: (id: string, home: number, away: number, winner?: string) => void;
+  onRecalculate: (id: string, home: number, away: number, winner?: string) => void;
   finishing: boolean;
   recalculating: boolean;
 }) {
@@ -247,18 +259,33 @@ function MatchAdminCard({
   const [awayScore, setAwayScore] = useState(
     match.away_score?.toString() ?? ""
   );
+  const [showWinnerPicker, setShowWinnerPicker] = useState(false);
 
+  const home = parseInt(homeScore) || 0;
+  const away = parseInt(awayScore) || 0;
+  const isDraw = home === away;
   const scoreChanged =
-    parseInt(homeScore) !== (match.home_score ?? 0) ||
-    parseInt(awayScore) !== (match.away_score ?? 0);
+    home !== (match.home_score ?? 0) ||
+    away !== (match.away_score ?? 0);
 
   const handleSave = () => {
-    if (match.finished) {
-      onRecalculate(match.id, parseInt(homeScore) || 0, parseInt(awayScore) || 0);
+    if (isDraw) {
+      setShowWinnerPicker(true);
     } else {
-      onFinish(match.id, parseInt(homeScore) || 0, parseInt(awayScore) || 0);
+      finishMatch(undefined);
     }
   };
+
+  const finishMatch = (winner: string | undefined) => {
+    setShowWinnerPicker(false);
+    if (match.finished) {
+      onRecalculate(match.id, home, away, winner);
+    } else {
+      onFinish(match.id, home, away, winner);
+    }
+  };
+
+  const resolving = finishing || recalculating;
 
   return (
     <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
@@ -296,28 +323,53 @@ function MatchAdminCard({
               M{match.bracket_order}
             </span>
           )}
+          {match.winner && (
+            <span className="bg-emerald-100 text-emerald-700 font-bold px-1.5 py-0.5 rounded text-[9px]">
+              {match.winner}
+            </span>
+          )}
         </span>
         {match.finished ? (
           <div className="flex items-center gap-2">
             <span className="text-emerald-600 font-semibold text-xs bg-emerald-50 px-2 py-0.5 rounded-full">✓ Zakończony</span>
             <button
               onClick={handleSave}
-              disabled={!homeScore || !awayScore || !scoreChanged || recalculating}
+              disabled={!homeScore || !awayScore || !scoreChanged || resolving}
               className="bg-amber-500 hover:bg-amber-600 active:scale-95 disabled:bg-slate-200 text-white disabled:text-slate-400 px-3 py-1 rounded-lg font-semibold transition-all duration-200 text-xs shadow-sm"
             >
-              {recalculating ? "..." : "Zapisz wynik"}
+              {resolving ? "..." : "Zapisz wynik"}
             </button>
           </div>
         ) : (
           <button
             onClick={handleSave}
-            disabled={!homeScore || !awayScore || finishing}
+            disabled={!homeScore || !awayScore || resolving}
             className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 disabled:bg-slate-200 text-white disabled:text-slate-400 px-3 py-1 rounded-lg font-semibold transition-all duration-200 text-xs shadow-sm"
           >
-            {finishing ? "..." : "Zakończ mecz"}
+            {resolving ? "..." : "Zakończ mecz"}
           </button>
         )}
       </div>
+
+      {showWinnerPicker && (
+        <div className="mt-3 pt-3 border-t border-slate-100">
+          <p className="text-xs font-semibold text-slate-600 mb-2">Remis — która drużyna wygrała po dogrywce?</p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => finishMatch(match.home_team)}
+              className="flex-1 bg-emerald-50 hover:bg-emerald-100 active:scale-[0.98] text-emerald-700 font-semibold px-3 py-2 rounded-lg border border-emerald-200 transition-all text-xs"
+            >
+              {match.home_team}
+            </button>
+            <button
+              onClick={() => finishMatch(match.away_team)}
+              className="flex-1 bg-emerald-50 hover:bg-emerald-100 active:scale-[0.98] text-emerald-700 font-semibold px-3 py-2 rounded-lg border border-emerald-200 transition-all text-xs"
+            >
+              {match.away_team}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

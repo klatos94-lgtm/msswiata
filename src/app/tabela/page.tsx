@@ -46,6 +46,7 @@ function TabelaContent() {
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [initialScrollDone, setInitialScrollDone] = useState(false);
 
   const view = searchParams.get("view") === "bracket" ? "bracket" : "table";
 
@@ -85,6 +86,26 @@ function TabelaContent() {
       loadData();
     });
   }, [loadData]);
+
+  useEffect(() => {
+    if (initialScrollDone || matches.length === 0 || view !== "table") return;
+
+    const future = matches.filter(
+      (m) => !m.finished && new Date(m.match_date) > now
+    );
+    const firstFuture = future[0];
+    if (!firstFuture) return;
+
+    const timer = setTimeout(() => {
+      const el = document.querySelector(`[data-match-id="${firstFuture.id}"]`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        setInitialScrollDone(true);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [matches, now, initialScrollDone, view]);
 
   const predictionMap = new Map<string, Prediction>();
   for (const p of predictions) {
@@ -246,7 +267,7 @@ function TabelaContent() {
                   const isPast24h = status === "live" || (status === "finished" && (now.getTime() - d.getTime()) < 86400000);
 
                   return (
-                    <tr key={match.id} className={`transition-colors ${cfg.rowBg} ${isPast24h ? "hover:bg-slate-50" : "hover:bg-slate-50/60"}`}>
+                    <tr key={match.id} data-match-id={match.id} className={`transition-colors ${cfg.rowBg} ${isPast24h ? "hover:bg-slate-50" : "hover:bg-slate-50/60"}`}>
                       <td className="sticky left-0 bg-white z-10 px-2 sm:px-3 py-2 w-[100px] sm:w-[220px] after:absolute after:right-0 after:top-0 after:bottom-0 after:w-[6px] after:bg-gradient-to-r after:from-black/5 after:to-transparent">
                         <div className="flex items-start gap-2">
                           <div className="hidden sm:flex flex-col items-center pt-0.5">
